@@ -394,7 +394,10 @@
       cancelAnimationFrame(heightFrame);
       heightFrame = requestAnimationFrame(() => {
         if (window.parent === window) return;
-        const height = Math.ceil(document.documentElement.scrollHeight);
+        const contentBottom = [...document.body.children].reduce((bottom,element) => {
+          return Math.max(bottom,element.getBoundingClientRect().bottom + window.scrollY);
+        },0);
+        const height = Math.max(320,Math.ceil(contentBottom + 1));
         window.parent.postMessage({ type: 'ecmi-programme-height', height }, '*');
       });
     }
