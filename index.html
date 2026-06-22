@@ -317,6 +317,13 @@
       if (fullName) row.chair = fullName;
     });
     const dayOrder = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+    const dayLabels = {
+      Monday: 'Monday (June 29)',
+      Tuesday: 'Tuesday (June 30)',
+      Wednesday: 'Wednesday (July 1)',
+      Thursday: 'Thursday (July 2), Industry day',
+      Friday: 'Friday (July 3)'
+    };
     const conferenceDates = {
       Monday: '2026-06-29',
       Tuesday: '2026-06-30',
@@ -582,7 +589,7 @@
           </details>`;
         }).join('');
         return `<details class="day-accordion" ${query || dayIndex === 0 ? 'open' : ''}>
-          <summary class="day-summary"><span>${esc(day)}</span></summary>
+          <summary class="day-summary"><span>${esc(dayLabels[day] || day)}</span></summary>
           <div class="day-content">${times}</div>
         </details>`;
       }).join('');
