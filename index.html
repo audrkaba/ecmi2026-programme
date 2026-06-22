@@ -306,6 +306,15 @@
         name: 'Hansjörg Wacker Memorial Prize winner', institution: '', title: '', track: ''
       }
     );
+    const chairAliases = {
+      vitorio: 'Vittorio Romano',
+      nastasi: 'Giovanni Nastasi',
+      camiola: 'Vito Dario Camiola'
+    };
+    source.forEach(row => {
+      const fullName = chairAliases[row.chair.toLowerCase()];
+      if (fullName) row.chair = fullName;
+    });
     const dayOrder = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
     const conferenceDates = {
       Monday: '2026-06-29',
