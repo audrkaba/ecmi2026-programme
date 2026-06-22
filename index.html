@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ECMI 2026 Programme</title>
+  <style>
+    :root {
+      --page: #f5f6f2;
+      --surface: #fff;
+      --ink: #17212b;
+      --muted: #667085;
+      --line: #d8ddd7;
+      --green: #176b52;
+      --green-soft: #e7f1ec;
+      --blue: #245d88;
+      --blue-soft: #e8f0f7;
+      --gold: #9b6514;
+      --gold-soft: #f6edda;
+      --red: #923f3a;
+      --red-soft: #f7e9e7;
+      --violet: #68518b;
+      --violet-soft: #eee9f5;
+      --shadow: 0 8px 24px rgba(23,33,43,.07);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.45;
+    }
+    .wrap { width: min(1240px, calc(100% - 32px)); margin-inline: auto; }
+    .page-head { padding: 28px 0 18px; }
+    h1 { margin: 0; font-size: 36px; letter-spacing: 0; }
+    .subtitle { margin: 5px 0 0; color: var(--muted); }
+    .filters-band {
+      background: var(--surface);
+      border-block: 1px solid var(--line);
+      padding: 13px 0;
+    }
+    .filters {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) auto auto;
+      gap: 10px;
+      align-items: end;
+    }
+    label {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    select, input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--ink);
+      padding: 9px 10px;
+      font-size: 15px;
+    }
+    select:focus, input:focus { outline: 3px solid rgba(36,93,136,.13); border-color: var(--blue); }
+    .check-control {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 4px;
+      color: var(--ink);
+      text-transform: none;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .check-control input { width: 18px; min-height: 18px; height: 18px; margin: 0; accent-color: var(--green); }
+    button {
+      min-height: 42px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--ink);
+      color: #fff;
+      padding: 0 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .summary { display: flex; gap: 8px; align-items: baseline; padding: 18px 0 4px; color: var(--muted); }
+    .summary strong { color: var(--ink); font-size: 20px; }
+    .programme { padding-bottom: 42px; }
+    .day-accordion { margin-top: 14px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); overflow: hidden; }
+    .day-summary, .time-summary { list-style: none; cursor: pointer; }
+    .day-summary::-webkit-details-marker, .time-summary::-webkit-details-marker { display: none; }
+    .day-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 62px;
+      padding: 14px 18px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .day-summary::after, .time-accordion > .time-summary::after { content: '+'; flex: 0 0 auto; font-size: 24px; line-height: 1; }
+    .day-accordion[open] > .day-summary::after, .time-accordion[open] > .time-summary::after { content: '\2212'; }
+    .summary-count { color: inherit; font-size: 13px; font-weight: 700; opacity: .75; }
+    .day-content { padding: 10px; background: #eef1ed; }
+    .time-accordion { background: var(--surface); border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+    .time-accordion + .time-accordion, .time-accordion + .time-standalone, .time-standalone + .time-accordion, .time-standalone + .time-standalone { margin-top: 8px; }
+    .time-standalone { background: var(--surface); border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+    .standalone-row {
+      display: grid;
+      grid-template-columns: 82px 150px minmax(0,1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 56px;
+      padding: 10px 14px;
+    }
+    .standalone-row.no-type { grid-template-columns: 82px minmax(0,1fr) auto; }
+    .standalone-row time { color: var(--blue); font-size: 20px; font-weight: 800; }
+    .standalone-type { color: var(--muted); font-size: 12px; font-weight: 800; text-transform: uppercase; }
+    .standalone-main { min-width: 0; overflow-wrap: anywhere; }
+    .standalone-main strong { margin-right: 8px; }
+    .standalone-title { color: #344054; }
+    .standalone-room { white-space: nowrap; color: var(--muted); font-size: 13px; }
+    .standalone-main .inline-map { color: var(--blue); font-weight: 800; text-decoration: underline; }
+    .plenary-row { background: var(--surface); border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+    .plenary-summary {
+      display: grid;
+      grid-template-columns: 82px 110px minmax(0,1fr) auto auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 58px;
+      padding: 10px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    .plenary-summary::-webkit-details-marker { display: none; }
+    .plenary-summary::after { content: '+'; color: var(--gold); font-size: 24px; line-height: 1; }
+    .plenary-row[open] > .plenary-summary::after { content: '\2212'; }
+    .plenary-summary time { color: var(--blue); font-size: 20px; font-weight: 800; }
+    .plenary-label { color: var(--gold); font-size: 12px; font-weight: 800; text-transform: uppercase; }
+    .plenary-main { min-width: 0; overflow-wrap: anywhere; }
+    .plenary-main strong { margin-right: 8px; }
+    .plenary-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+      padding: 12px 14px 13px 216px;
+      border-top: 1px solid var(--line);
+      background: var(--gold-soft);
+      color: #4f4025;
+      font-size: 14px;
+    }
+    .plenary-details p { margin: 0; }
+    .plenary-details a { color: var(--blue); font-weight: 700; }
+    .plenary-actions { flex: 0 0 100%; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px 20px; }
+    .abstract-details { flex: 1 1 560px; }
+    .abstract-details summary { width: fit-content; color: var(--blue); font-weight: 700; cursor: pointer; }
+    .abstract-details p { margin-top: 10px; color: var(--ink); line-height: 1.58; }
+    .time-summary {
+      display: grid;
+      grid-template-columns: 90px minmax(0,1fr) auto auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 52px;
+      padding: 10px 14px;
+      background: #fff;
+    }
+    .time-summary:hover { background: #f8faf7; }
+    .time-summary time { color: var(--blue); font-size: 20px; font-weight: 800; }
+    .time-summary strong { font-size: 16px; }
+    .block-rooms { color: var(--muted); font-size: 13px; font-weight: 700; text-align: right; white-space: nowrap; }
+    .time-group { border-top: 1px solid var(--line); padding: 12px; background: #f8faf7; }
+    .session-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .session-card {
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--green);
+      border-radius: 7px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .session-card.plenary { border-left-color: var(--gold); }
+    .session-card.break { border-left-color: var(--blue); }
+    .session-card.meal { border-left-color: var(--red); }
+    .session-card.social { border-left-color: var(--violet); }
+    .session-card.programme-item { border-left-color: #4d5965; }
+    .session-head { padding: 12px 14px; border-bottom: 1px solid var(--line); background: #fbfcfa; }
+    details.session-card > .session-head {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 0;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.session-card > .session-head::-webkit-details-marker { display: none; }
+    details.session-card > .session-head::after { content: '+'; font-size: 23px; line-height: 1; color: var(--green); }
+    details.session-card[open] > .session-head { border-bottom: 1px solid var(--line); }
+    details.session-card[open] > .session-head::after { content: '\2212'; }
+    details.session-card > .session-head > div { min-width: 0; }
+    .session-type { margin: 0 0 3px; color: var(--green); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .plenary .session-type { color: var(--gold); }
+    .break .session-type { color: var(--blue); }
+    .meal .session-type { color: var(--red); }
+    .social .session-type { color: var(--violet); }
+    .programme-item .session-type { color: #4d5965; }
+    .session-head h4 { margin: 0; font-size: 16px; overflow-wrap: anywhere; }
+    .session-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 7px; color: var(--muted); font-size: 13px; }
+    .talk-list { margin: 0; padding: 0; list-style: none; }
+    .talk { display: grid; grid-template-columns: 58px minmax(0,1fr); gap: 10px; padding: 12px 14px; }
+    .talk + .talk { border-top: 1px solid var(--line); }
+    .talk-time { color: var(--blue); font-weight: 800; }
+    .speaker { margin: 0; font-weight: 800; }
+    .speaker-institution { color: var(--muted); font-weight: 400; }
+    .institution { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .talk-title { margin: 5px 0 0; overflow-wrap: anywhere; }
+    .single-item { padding: 14px; }
+    .single-name { margin: 0; font-size: 18px; font-weight: 800; }
+    .single-title { margin: 5px 0 0; }
+    .empty { display: none; padding: 32px; text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: 7px; color: var(--muted); }
+    mark { background: #ffe192; border-radius: 2px; padding: 0 2px; }
+    @media (max-width: 920px) {
+      .filters { grid-template-columns: 1fr 1fr; }
+      .session-grid { grid-template-columns: 1fr; }
+      button { width: 100%; }
+    }
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 20px, 1240px); }
+      .page-head { padding-top: 20px; }
+      h1 { font-size: 29px; }
+      .filters { grid-template-columns: 1fr; }
+      .time-summary { grid-template-columns: 58px minmax(0,1fr) auto auto; gap: 8px; }
+      .time-summary .summary-count { display: none; }
+      .time-summary time { font-size: 17px; }
+      .block-rooms { max-width: 115px; white-space: normal; font-size: 11px; }
+      .standalone-row { grid-template-columns: 58px minmax(0,1fr); gap: 4px 10px; }
+      .standalone-row.no-type { grid-template-columns: 58px minmax(0,1fr); }
+      .standalone-type { grid-column: 2; }
+      .standalone-main { grid-column: 2; }
+      .standalone-room { grid-column: 2; }
+      .plenary-summary { grid-template-columns: 58px minmax(0,1fr) auto; gap: 4px 10px; }
+      .plenary-label, .plenary-main { grid-column: 2; }
+      .plenary-summary .standalone-room { grid-column: 2; }
+      .plenary-details { padding: 12px 14px 13px 82px; }
+      .talk { grid-template-columns: 48px minmax(0,1fr); padding-inline: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head wrap">
+    <h1>ECMI 2026 Programme</h1>
+    <p class="subtitle">Select a day, then open a specific time to view its activities.</p>
+  </header>
+
+  <section class="filters-band">
+    <div class="filters wrap">
+      <label>Search
+        <input id="searchFilter" type="search" placeholder="Speaker, title, session, or room">
+      </label>
+      <label class="check-control">
+        <input id="fullProgramme" type="checkbox">
+        <span>Search entire programme</span>
+      </label>
+      <button id="clearBtn" type="button">Clear</button>
+    </div>
+  </section>
+
+  <main class="wrap programme">
+    <div id="schedule"></div>
+    <div class="empty" id="emptyState">No programme entries match these filters.</div>
+  </main>
+
+  <script>
+    const source = [{"day":"Monday","time":"09:00","room":"A1","chair":"","name":"Marta Fiocco","institution":"","title":"A Two-Step Methodology for Causal Inference with Survival Outcomes in the Presence of Time-Varying Latent Confounding","track":"Plenary 1"},{"day":"Monday","time":"10:00","room":"","chair":"","name":"Coffee break","institution":"","title":"","track":""},{"day":"Monday","time":"10:30","room":"A1","chair":"","name":"Patrizio Frosini","institution":"University of Pisa, Italy","title":"Information Extraction from Data via Group-Equivariant Non-Expansive Operators","track":"Mathematics for Big Data and Artificial Intelligence (Alessandra Micheletti & Natasa Krejic)"},{"day":"Monday","time":"10:50","room":"A1","chair":"Alessandra Micheletti","name":"Alessandra Micheletti","institution":"Universit\u00e0 degli Studi di Milano Statale, Italy","title":"Transparent AI methods for drug design based on Group Equivariant Non Expansive Operators","track":"Mathematics for Big Data and Artificial Intelligence (Alessandra Micheletti & Natasa Krejic)"},{"day":"Monday","time":"11:10","room":"A1","chair":"","name":"Alessandro Benfenati","institution":"Universit\u00e0 degli Studi di Milano Statale, Italy","title":"Plug and Play Splitting Methods for RGB and Hyperspectral Poisson Data Restoration","track":"Mathematics for Big Data and Artificial Intelligence (Alessandra Micheletti & Natasa Krejic)"},{"day":"Monday","time":"11:30","room":"A1","chair":"","name":"Rongjiao Ji","institution":"Universit\u00e0 degli Studi di Milano Statale, Italy","title":"A Statistical Learning Framework for Predicting Soil Organic Carbon under Climate and Policy Scenarios","track":"Mathematics for Big Data and Artificial Intelligence (Alessandra Micheletti & Natasa Krejic)"},{"day":"Monday","time":"10:30","room":"A2","chair":"","name":"Jos\u00e9 M. Mantas & Francesco Vecilc","institution":"University of Granada, Spain","title":"GPU-ACCELERATED DETERMINISTIC SIMULATION OF CHARGE TRANSPORT IN\nGRAPHENE","track":"Mathematical Problems from Semiconductor Industry (Vito Dario Camiola, Giovanni Nastasi, Vittorio Romano)"},{"day":"Monday","time":"10:30","room":"A2","chair":"Vitorio","name":"Francesco Vecil","institution":"University Clermont Auvergne, France","title":"Port to GPU of a solver for the homogeneous Boltzmann transport equation","track":"Mathematical Problems from Semiconductor Industry (Vito Dario Camiola, Giovanni Nastasi, Vittorio Romano)"},{"day":"Monday","time":"10:30","room":"A2","chair":"","name":"Giovanni Nastasi","institution":"University of Enna \u201cKore\u201d, Italy","title":"SEMICLASSICAL BOLTZMANN TRANSPORT MODELING OF GRAPHENE-BASED\nELECTRONIC DEVICES","track":"Mathematical Problems from Semiconductor Industry (Vito Dario Camiola, Giovanni Nastasi, Vittorio Romano)"},{"day":"Monday","time":"10:30","room":"A2","chair":"","name":"Patricio Farrell","institution":"Weierstrass Institute for Applied Analysis and Stochastics, Germany","title":"How nanotextured interfaces influence the electronics in perovskite solar cells","track":"Mathematical Problems from Semiconductor Industry (Vito Dario Camiola, Giovanni Nastasi, Vittorio Romano)"},{"day":"Monday","time":"10:30","room":"A225","chair":"Agnieszka Wylomanska","name":"Agnieszka Wylomanska","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"Novel techniques based on robust statistics for condition monitoring in highly impulsive environment","track":"Mathematical Modelling for Industrial Applications (Agnieszka Wy\u0142oma\u0144ska)"},{"day":"Monday","time":"10:30","room":"A225","chair":"","name":"Justyna Witulska","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"Data-efficient online anomaly detection with automatic model adaptation for complex systems monitoring.","track":"Mathematical Modelling for Industrial Applications (Agnieszka Wy\u0142oma\u0144ska)"},{"day":"Monday","time":"10:30","room":"A225","chair":"","name":"Tom Lahmer","institution":"Bauhaus-University Weimar, Germany","title":"Inverse Problems in Structural Health Monitoring: A Retrospective and Future Perspectives","track":"Mathematical Modelling for Industrial Applications (Agnieszka Wy\u0142oma\u0144ska)"},{"day":"Monday","time":"10:30","room":"A225","chair":"","name":"Michael Vynnycky","institution":"University of Limerick, Ireland","title":"MODELLING THE GAS-SOLID FLOW OF AN IRONMAKING BLAST FURNACE","track":"Mathematical Modelling for Industrial Applications (Agnieszka Wy\u0142oma\u0144ska)"},{"day":"Monday","time":"10:30","room":"106","chair":"Ann Smith","name":"Ann Smith","institution":"University of Huddersfield, United Kingdom.","title":"Surface-Dependent Motion Calibration for a Home Rehabilitation Device.","track":"Mathematical and Applied Physics"},{"day":"Monday","time":"10:30","room":"106","chair":"","name":"Emilio Defez","institution":"Universitat Polit\u00e8cnica de Val\u00e8ncia, Spain","title":"A method based on Bessel polynomials for an accurate matrix exponential approximation","track":"Mathematical and Applied Physics"},{"day":"Monday","time":"10:30","room":"107","chair":"","name":"Ana Maria Alonso Rodriguez","institution":"University of Trento, Italy","title":"An Evolve-Filter-Relax regularization model for the numerical simulation of incompressible MHD flows","track":"Modeling, Simulation and Optimization in Electrical Engineering (Rafael V\u00e1zquez, Melina Merkel, Idoia Cort\u00e9s, Dolores G\u00f3mez)"},{"day":"Monday","time":"10:30","room":"107","chair":"","name":"Ondine Chanon","institution":"ABB Schweiz AG, Switzerland","title":"Towards design simplification error estimators for electrostatic breakdown simulations","track":"Modeling, Simulation and Optimization in Electrical Engineering (Rafael V\u00e1zquez, Melina Merkel, Idoia Cort\u00e9s, Dolores G\u00f3mez)"},{"day":"Monday","time":"10:30","room":"107","chair":"Melina Merkel","name":"Melina Merkel","institution":"Technical University of Darmstadt, Germany","title":"Isogeometric Analysis for the Computation of Deformation in Electric Machines","track":"Modeling, Simulation and Optimization in Electrical Engineering (Rafael V\u00e1zquez, Melina Merkel, Idoia Cort\u00e9s, Dolores G\u00f3mez)"},{"day":"Monday","time":"12:00","room":"","chair":"","name":"Lunch","institution":"","title":"","track":""},{"day":"Monday","time":"14:00","room":"A1","chair":"","name":"Paola F. Antonietti","institution":"","title":"The Mathematics of Neurodegenerative Diseases","track":"Plenary 2"},{"day":"Monday","time":"15:00","room":"","chair":"","name":"Coffee break","institution":"","title":"","track":""},{"day":"Monday","time":"15:30","room":"A1","chair":"Greta Malaspina","name":"Greta Malaspina","institution":"University of Florence, Italy","title":"An Objective-Function-Free Trust Region Framework for Decentralized Optimization","track":"Mathematics for Big Data and Artificial Intelligence (Alessandra Micheletti & Natasa Krejic)"},{"day":"Monday","time":"15:50","room":"A1","chair":"","name":"Luka Rute\u0161i\u0107","institution":"University of Novi Sad, Serbia","title":"IPAS: An Adaptive Sample Size Method for Weighted Finite Sum Problems with Linear Equality Constraints","track":"Mathematics for Big Data and Artificial Intelligence (Alessandra Micheletti & Natasa Krejic)"},{"day":"Monday","time":"16:20","room":"A1","chair":"","name":"Martin Masaba","institution":"Stockhold University, Sweden","title":"GeoGround: A Contrastive Learning Framework for Domain Adaptation of Vision-Language Models in Petrophysical Image Interpretation","track":"Mathematics for Big Data and Artificial Intelligence (Alessandra Micheletti & Natasa Krejic)"},{"day":"Monday","time":"15:30","room":"A2","chair":"Nastasi","name":"Vittorio Romano","institution":"University of Catania, Italy","title":"High-order Schr\u00f6dinger equations for ballistic charge transport","track":"Mathematical Problems from Semiconductor Industry (Vito Dario Camiola, Giovanni Nastasi, Vittorio Romano)"},{"day":"Monday","time":"15:30","room":"A2","chair":"","name":"Orazio Muscato","institution":"University of Catania, Italy","title":"DECOHERENCE EFFECTS IN THE WIGNER-BOLTZMANN FORMALISM","track":"Mathematical Problems from Semiconductor Industry (Vito Dario Camiola, Giovanni Nastasi, Vittorio Romano)"},{"day":"Monday","time":"15:30","room":"A2","chair":"","name":"Vito Dario Camiola","institution":"University of Catania, Italy","title":"A QUANTUM HYDRODYNAMIC MODEL FOR CHARGE TRANSPORT THROUGH A GAAS\nRESONANT TUNNELLING DIODE","track":"Mathematical Problems from Semiconductor Industry (Vito Dario Camiola, Giovanni Nastasi, Vittorio Romano)"},{"day":"Monday","time":"15:30","room":"A2","chair":"","name":"Michael O'Donovan","institution":"Weierstrass Institute for Applied Analysis and Stochastics, Germany","title":"Modeling charge transport in memristive TMDC materials","track":"Mathematical Problems from Semiconductor Industry (Vito Dario Camiola, Giovanni Nastasi, Vittorio Romano)"},{"day":"Monday","time":"15:30","room":"A225","chair":"","name":"Bogna Jaszczak-Dyka","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"A UNIFIED MODEL FOR BLOOD AND LYMPH FLOW WITH COUPLED NONSMOOTH\nBIOCHEMICAL DYNAMICS","track":"Mathematical Modelling for Industrial Applications (Agnieszka Wy\u0142oma\u0144ska)"},{"day":"Monday","time":"15:30","room":"A225","chair":"Krzystof Burnecki","name":"Ellen Marie Nordg\u00e5rd-Hansen","institution":"NORCE Research AS, Norway","title":"Physics Based Modeling of Solvent Transport and Heat Transfer in UHMWPE Fiber Stretching","track":"Mathematical Modelling for Industrial Applications (Agnieszka Wy\u0142oma\u0144ska)"},{"day":"Monday","time":"15:30","room":"A225","chair":"","name":"Ida Monsen","institution":"NORCE Research AS, Norway","title":"IDENTIFYING KEY PROCESS PARAMETERS IN UHMWPE FIBER PRODUCTION THROUGH\nSTATISTICAL DESIGN AND ANALYSIS","track":"Mathematical Modelling for Industrial Applications (Agnieszka Wy\u0142oma\u0144ska)"},{"day":"Monday","time":"15:30","room":"A225","chair":"","name":"Ricardo Roque Engui\u00e7a","institution":"Polytechnic Institute of Lisbon, Portugal","title":"Parallel machine scheduling with simultaneous interruptions: a case study in shoe sole production","track":"Industrial Mathematics and Beyond: Models, Methods, and Applications (Ricardo Engui\u00e7a)"},{"day":"Monday","time":"15:30","room":"106","chair":"Ernestas Uzdila","name":"Fat\u00e9ma GOULAMALY","institution":"Eindhoven University of Technology, the Netherlands","title":"Inverse Design of Freeform Reflectors for 2D Finite Sources and Far-Field Targets","track":"Mathematical and Applied Physics"},{"day":"Monday","time":"15:30","room":"106","chair":"","name":"Michael M. Tung","institution":"Universitat Polit\u00e8cnica de Val\u00e8ncia, Spain","title":"The (2+1)D sperical conformal cylinder and its acoustic analogue","track":"Mathematical and Applied Physics"},{"day":"Monday","time":"15:30","room":"107","chair":"","name":"Kiran Shahzadi","institution":"Kaunas university of technology, Lithuania","title":"Analyzing the Dynamical Connection Between Global Atmospheric Electromagnetic Activity and Human Heart Rate Complexity","track":"Data Science and Statistics"},{"day":"Monday","time":"15:30","room":"107","chair":"","name":"Goda Jan\u010di\u016bnait\u0117","institution":"Kaunas university of technology, Lithuania","title":"Cell nuclei segmentation and evaluation of distribution in microscopic images","track":"Data Science and Statistics"},{"day":"Monday","time":"15:30","room":"107","chair":"Leonidas Sakalauskas","name":"Leonidas Sakalauskas & Neringa Urbonait\u0117","institution":"Institute of Data Science and Digital Technologies, Lithuania","title":"Fractional Brownian Vector Field for Multifractal Analysis","track":"Data Science and Statistics"},{"day":"Monday","time":"15:30","room":"107","chair":"","name":"Nataliya Togobytska","institution":"Hochschule f\u00fcr Technik und Wirtschaft Berlin, Germany","title":"Data-driven modeling of melt pool geometry in metal additive manufacturing","track":"Data Science and Statistics"},{"day":"Monday","time":"17:00","room":"","chair":"","name":"Coffee break","institution":"","title":"","track":""},{"day":"Monday","time":"17:15","room":"A1","chair":"","name":"Shankar Lal Dangi","institution":"Kaunas University of Technology, Lithuania","title":"Mathematical Modelling and Data Driven Surrogates for Hydrogen Storage Performance Assessment in Subsurface Aquifers","track":"Mathematics for Big Data and Artificial Intelligence (Alessandra Micheletti & Natasa Krejic)"},{"day":"Monday","time":"17:35","room":"A1","chair":"","name":"Abdul Rashid Abdul Nabi Memon","institution":"Kaunas University of Technology, Lithuania","title":"AI-Powered Digital Twins for Geothermal Reservoir Design and Decision Support","track":"Mathematics for Big Data and Artificial Intelligence (Alessandra Micheletti & Natasa Krejic)"},{"day":"Monday","time":"17:55","room":"A1","chair":"Farid Bozorgnia","name":"Farid Bozorgnia","institution":"Tecnico Lisboa, Portugal","title":"Graph-Based Semi-Supervised Learning via PDEs and Total Variation","track":"Mathematics for Big Data and Artificial Intelligence (Alessandra Micheletti & Natasa Krejic)"},{"day":"Monday","time":"17:15","room":"A2","chair":"Camiola","name":"Zeina Amer","institution":"Forschungsverbund Berlin e.V., Germany","title":"Van Roosbroeck-Helmholtz model for a semiconductor laser diode: Model and analysis","track":"Mathematical Problems from Semiconductor Industry (Vito Dario Camiola, Giovanni Nastasi, Vittorio Romano)"},{"day":"Monday","time":"17:15","room":"A2","chair":"","name":"Antonio Sellitto","institution":"University of Salerno, Italy","title":"THE KNUDSEN LAYER IN THE HEAT TRANSPORT BEYOND THE FOURIER LAW:\nAPPLICATION TO THE WAVE PROPAGATION AT NANOSCALE","track":"Mathematical Problems from Semiconductor Industry (Vito Dario Camiola, Giovanni Nastasi, Vittorio Romano)"},{"day":"Monday","time":"17:15","room":"A2","chair":"","name":"Ivana Bochicchio","institution":"University of Salerno, Italy","title":"Heat transfer at nanoscale and boundary conditions","track":"Mathematical Problems from Semiconductor Industry (Vito Dario Camiola, Giovanni Nastasi, Vittorio Romano)"},{"day":"Monday","time":"17:15","room":"107","chair":"","name":"Paulina Sabanskyt\u0117","institution":"Kaunas university of technology,  Lithuania","title":"Hankel matrix-based multi-step bearing diagnostics","track":"Data Science and Statistics"},{"day":"Monday","time":"17:15","room":"107","chair":"","name":"Valeriia Baranivska","institution":"National Technical University of Ukraine, Ukraine","title":"Mathematical and Software Framework for Automated Selection and Quality-Based Ranking of Digital Photographs","track":"Data Science and Statistics"},{"day":"Monday","time":"17:15","room":"107","chair":"Zsigmond Benko","name":"Zsigmond Benko","institution":"HUN-REN Wigner Research Centre for Physics, Budapest, Hungary","title":"Inferring Hidden Common Drivers with Mapper\u2011Coach and Self\u2011Organizing Networks","track":"Data Science and Statistics"},{"day":"Monday","time":"19:00","room":"","chair":"","name":"ECMI welcome reception","institution":"","title":"","track":""},{"day":"Tuesday","time":"09:00","room":"A1","chair":"","name":"Pawe\u0142 D\u0142otko","institution":"","title":"Shape Matters: Topological Data Analysis for Understanding Complex Systems","track":"Plenary 3"},{"day":"Tuesday","time":"10:00","room":"","chair":"","name":"Coffee break","institution":"","title":"","track":""},{"day":"Tuesday","time":"10:30","room":"A2","chair":"Agnieszka Wylomanska","name":"Krzysztof Burnecki","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"Pricing approaches for insurance-linked securities","track":"Pricing of Insurance-Linked Securities (Krzysztof Burnecki)"},{"day":"Tuesday","time":"10:30","room":"A2","chair":"","name":"Marek Teuerle","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"Pricing contingent convertible catastrophe bonds: from analytical solutions to diffusion approximations","track":"Pricing of Insurance-Linked Securities (Krzysztof Burnecki)"},{"day":"Tuesday","time":"10:30","room":"A2","chair":"","name":"Martyna Zdeb","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"The Necessity of Time-Varying Distributions in Natural Catastrophe Modelling","track":"Pricing of Insurance-Linked Securities (Krzysztof Burnecki)"},{"day":"Tuesday","time":"10:30","room":"A225","chair":"","name":"Mar\u00eda Dolores G\u00f3mez Pedreira","institution":"Universidade de Santiago de Compostela, Spain","title":"Mathematical modeling and numerical simulation of a metallurgical purification process in the photovoltaic industry","track":"Eu-Maths-In -- Mathematics For Innovation: Success Stories & Support For European Industries (Matthias Ehrhardt, Manuel Cruz)"},{"day":"Tuesday","time":"10:30","room":"A225","chair":"","name":"Manuel Cruz","institution":"Instituto Polit\u00e9cnico do Porto, Portugal","title":"Predictive Modelling and Route Optimisation for Urban Waste Collection","track":"Eu-Maths-In -- Mathematics For Innovation: Success Stories & Support For European Industries (Matthias Ehrhardt, Manuel Cruz)"},{"day":"Tuesday","time":"10:30","room":"A225","chair":"","name":"Ram Mohan Tirunelveli Vallinayagam","institution":"Basque Center of Applied Mathematics, Spain","title":"Lattice Kinetic Monte Carlo for Large-Scale Hydrogen Diffusion in Steel Alloys","track":"Eu-Maths-In -- Mathematics For Innovation: Success Stories & Support For European Industries (Matthias Ehrhardt, Manuel Cruz)"},{"day":"Tuesday","time":"10:30","room":"106","chair":"","name":"Erblina Zekjiri Sinani","institution":"Ss. Cyril and Methodius University in Skopje, N. Macedonia","title":"Nonlinear time series models for analysing seismic data and seismic noise (Erblina Zeqiri Sinani, Irena Stojkovska)","track":"Ecology and Earth Sciences"},{"day":"Tuesday","time":"10:30","room":"106","chair":"","name":"Irena Stojkovska","institution":"Ss. Cyril and Methodius University in Skopje, N. Macedonia","title":"Nonlinear time series models for analysing seismic data and seismic noise","track":"Ecology and Earth Sciences"},{"day":"Tuesday","time":"10:30","room":"106","chair":"Cl\u00e1udia Nunes","name":"Cl\u00e1udia Nunes","institution":"Instituto Superior T\u00e9cnico, Lisboa, Portugal","title":"Interactions between Innovation Strategy and Production Capacity Investments","track":"Economics, Finance and Insurance"},{"day":"Tuesday","time":"10:30","room":"107","chair":"Dietmar","name":"Matti Heilio","institution":"Lappeenranta University of Technology, Finland","title":"Mathematics and Working life relevance in Eastern Africa","track":"Activities in Industrial and Applied Mathematics in East Africa (Dietmar H\u00f6mberg, Zerihun Kinfe, Matti Heilio)"},{"day":"Tuesday","time":"10:50","room":"107","chair":"","name":"John Mango Magero","institution":"Makerere University, Uganda","title":"Sida-Makerere PhD School, applied mathematics topics and results","track":"Activities in Industrial and Applied Mathematics in East Africa (Dietmar H\u00f6mberg, Zerihun Kinfe, Matti Heilio)"},{"day":"Tuesday","time":"11:10","room":"107","chair":"","name":"Guttorm Alendal","institution":"University of Bergen, Norway","title":"Mathematics for Sustainability","track":"Activities in Industrial and Applied Mathematics in East Africa (Dietmar H\u00f6mberg, Zerihun Kinfe, Matti Heilio)"},{"day":"Tuesday","time":"11:30","room":"107","chair":"","name":"Zerihun Kinfe Birhanu","institution":"Hawassa University, Ethiopia","title":"Strengthening Industrial and Applied Mathematics in East Africa: The Ethiopian Norwegian Network in Computational Mathematics (ENNCoMat)","track":"Activities in Industrial and Applied Mathematics in East Africa (Dietmar H\u00f6mberg, Zerihun Kinfe, Matti Heilio)"},{"day":"Tuesday","time":"10:30","room":"108","chair":"Micha\u0142 Balcerek","name":"Algirdas Kazlauskas","institution":"Kaunas University of Technology, Lithuania","title":"Interplay Between Power-Law and Exponential Rates in Matrix-Valued Fractional Maps ","track":"Fractional Dynamics and Applications (Janusz Szwabi\u0144ski)"},{"day":"Tuesday","time":"10:30","room":"108","chair":"","name":"Fadi Awawdeh","institution":"The Hashemite University, Jordan","title":"Structure-Preserving Finite Difference Schemes for Time\u2013Fractional Fokker\u2013Planck Equations","track":"Fractional Dynamics and Applications (Janusz Szwabi\u0144ski)"},{"day":"Tuesday","time":"10:30","room":"108","chair":"","name":"Jakub Malinowski","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"Detection of tempered fractional Brownian motion","track":"Fractional Dynamics and Applications (Janusz Szwabi\u0144ski)"},{"day":"Tuesday","time":"10:30","room":"108","chair":"","name":"\u0141ukasz P\u0142ociniczak","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"Parareal-in-time, spectral-in-space: fast L1 quasilinear subdiffusion solver","track":"Fractional Dynamics and Applications (Janusz Szwabi\u0144ski)"},{"day":"Tuesday","time":"10:30","room":"110","chair":"","name":"Ahmed Amine Tabbassi","institution":"Hamm-Lippstadt University of Applied Sciences, Germany","title":"When the Digital Factory is a Field, Robust Optimisation under Biological Uncertainty","track":"Mathematics for the Digital Factory (Joachim Linn & Dietmar H\u00f6mberg)"},{"day":"Tuesday","time":"10:30","room":"110","chair":"","name":"Edvin \u00c5blad","institution":"Fraunhofer-Chalmers Centre, Sweden","title":"Robot task sequencing on moving lines via sparse time-expanded networks","track":"Mathematics for the Digital Factory (Joachim Linn & Dietmar H\u00f6mberg)"},{"day":"Tuesday","time":"10:30","room":"110","chair":"Hannah Lindmossen","name":"Hannah Lindmossen","institution":"Fraunhofer-Chalmers Centre, Sweden","title":"Minimising cycle time in an assembly line with human workers","track":"Mathematics for the Digital Factory (Joachim Linn & Dietmar H\u00f6mberg)"},{"day":"Tuesday","time":"10:30","room":"110","chair":"","name":"Jamey Tyrone Breuer","institution":"Weierstrass Institute, Germany","title":"A Thermodynamically Consistent Model for Multiphase Microstructure Evolution and Viscoplasticity in Laser Powder Bed Fusion of Steels","track":"Mathematics for the Digital Factory (Joachim Linn & Dietmar H\u00f6mberg)"},{"day":"Tuesday","time":"12:00","room":"","chair":"","name":"Lunch","institution":"","title":"","track":""},{"day":"Tuesday","time":"14:00","room":"A1","chair":"","name":"Lorenzo Pareschi","institution":"","title":"The Mathematics behind Plasma Fusion: From Multiscale Dynamics to Learning and Control","track":"Plenary 4"},{"day":"Tuesday","time":"15:00","room":"","chair":"","name":"Coffee break","institution":"","title":"","track":""},{"day":"Tuesday","time":"15:30","room":"A1","chair":"Timothy Myers","name":"Timothy Myers","institution":"Centre de Recerca Matem\u00e0tica, Spain","title":"Mathematical modelling of corrosion inhibition","track":"Contaminant capture from the Environment: Mathematical Models and Methods (Timothy Myers (CRM); Francesc Font (UPC); Maria Aguareles (UdG))"},{"day":"Tuesday","time":"15:50","room":"A1","chair":"","name":"Rachael Olwande","institution":"Centre de Recerca Matem\u00e0tica, Spain","title":"Modelling of single and multi-component batch adsorption","track":"Contaminant capture from the Environment: Mathematical Models and Methods (Timothy Myers (CRM); Francesc Font (UPC); Maria Aguareles (UdG))"},{"day":"Tuesday","time":"16:10","room":"A1","chair":"","name":"Udayraj Thorat","institution":"Centre de Recerca Matem\u00e0tica, Spain","title":"Modelling the simulatenous adsorption of two competing species","track":"Contaminant capture from the Environment: Mathematical Models and Methods (Timothy Myers (CRM); Francesc Font (UPC); Maria Aguareles (UdG))"},{"day":"Tuesday","time":"15:30","room":"A2","chair":"Audrius Kabasinskas","name":"Audrius Kabasinskas","institution":"Kaunas University of Technology, Lithuania","title":"IDENTIFICATION OF FACTORS INFLUENCING PILLARS OF MULTI-PILLAR PENSION SYSTEMS","track":"Modeling of Pension Systems (Audrius Kaba\u0161inskas)"},{"day":"Tuesday","time":"15:50","room":"A2","chair":"","name":"Igor Melichercik","institution":"Comenius University Bratislava, Slovakia","title":"Income-oriented retirement investment model","track":"Modeling of Pension Systems (Audrius Kaba\u0161inskas)"},{"day":"Tuesday","time":"16:20","room":"A2","chair":"","name":"Kristina \u0160utien\u0117","institution":"Kaunas University of Technology, Lithuania","title":"Network-based Analysis of Information Transmission Between Lithuanian Pension Funds and External Markets","track":"Modeling of Pension Systems (Audrius Kaba\u0161inskas)"},{"day":"Tuesday","time":"16:40","room":"A2","chair":"","name":"Megang Nkamga Junile Staures","institution":"Kaunas University of Technology, Lithuania","title":"Cluster-Aggregated SHAP for  Systemic Risk Analysis","track":"Modeling of Pension Systems (Audrius Kaba\u0161inskas)"},{"day":"Tuesday","time":"15:30","room":"A225","chair":"","name":"Gerardo Toraldo","institution":"University of Campania \u201cLuigi Vanvitelli\u201d, Italy","title":"Acceleration strategies for first-order methods","track":"Advances in numerical methods for  nonlinear optimization and applications (Stefania Bellavia)"},{"day":"Tuesday","time":"15:50","room":"A225","chair":"","name":"Giacomo Albi","institution":"University of Verona, Italy","title":"Sparse stabilization of mean-field agent dynamics through a three-operator splitting method","track":"Advances in numerical methods for  nonlinear optimization and applications (Stefania Bellavia)"},{"day":"Tuesday","time":"16:10","room":"A225","chair":"","name":"Lisa Bertini","institution":"University of Florence, Italy","title":"Randomized Singular Value Thresholding for Large-scale Matrix Completion","track":"Advances in numerical methods for  nonlinear optimization and applications (Stefania Bellavia)"},{"day":"Tuesday","time":"16:50","room":"A225","chair":"Stefania","name":"Stefania Bellavia","institution":"Universit\u00e0 di Firenze, Italy","title":"Randomised Levenberg-Marquardt methods for nonlinear least-squares","track":"Advances in numerical methods for  nonlinear optimization and applications (Stefania Bellavia)"},{"day":"Tuesday","time":"15:30","room":"A225","chair":"","name":"Khalifa Al Shaqsi","institution":"University of Nizwa, Oman","title":"Algorithms for Neutrosophic Linear Optimization Using Touchard Polynomial-Based Defuzzification","track":"Advances in numerical methods for  nonlinear optimization and applications (Stefania Bellavia)"},{"day":"Tuesday","time":"15:30","room":"106","chair":"","name":"Mutlu Akar","institution":"Yildiz Technical University, Turkey","title":"Periodic and Localized Wave Solutions of the Davey-Stewartson-Kadomtsev-Petviashvili (DSKP) Equation","track":"Mathematical and Applied Physics"},{"day":"Tuesday","time":"15:30","room":"106","chair":"Sarah Nysen","name":"Sarah Nysen","institution":"Eindhoven University of Technology, the Netherlands","title":"A Minimization Approach for the Design of TIR Collimators","track":"Mathematical and Applied Physics"},{"day":"Tuesday","time":"15:30","room":"107","chair":"","name":"Samson Seifu Bekele","institution":"Hawassa University, Ethiopia","title":"Identification of the rubber curing dynamics from Moving Die Rheometer data","track":"Activities in Industrial and Applied Mathematics in East Africa (Dietmar H\u00f6mberg, Zerihun Kinfe, Matti Heilio)"},{"day":"Tuesday","time":"15:50","room":"107","chair":"","name":"Mesfin Mekuria Woldaregay","institution":"Adama Science and Technology University, Ethiopia","title":"Finite Element Simulation of Rubber Curing","track":"Activities in Industrial and Applied Mathematics in East Africa (Dietmar H\u00f6mberg, Zerihun Kinfe, Matti Heilio)"},{"day":"Tuesday","time":"16:10","room":"107","chair":"Dietmar","name":"Maregnesh-Mechal Wolde","institution":"Hawassa University, Ethiopia","title":"Sediment delivery rate and lake bathymetry","track":"Activities in Industrial and Applied Mathematics in East Africa (Dietmar H\u00f6mberg, Zerihun Kinfe, Matti Heilio)"},{"day":"Tuesday","time":"15:30","room":"108","chair":"","name":"Magda Rebelo","institution":"Universidade Nova de Lisboa, Portugal","title":"On the Mathematical Analysis of Elasticity Models with Combined Tempered and Fractional Derivatives","track":"Fractional Dynamics and Applications (Janusz Szwabi\u0144ski)"},{"day":"Tuesday","time":"15:30","room":"108","chair":"\u0141ukasz P\u0142ociniczak","name":"Janusz Szwabi\u0144ski","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"A hybrid approach to change point detection and parameter estimation in single-particle tracking data","track":"Fractional Dynamics and Applications (Janusz Szwabi\u0144ski)"},{"day":"Tuesday","time":"15:30","room":"108","chair":"","name":"Marcin Mi\u015bkiewicz","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"Neural network correction for numerical solutions of stochastic differential equations","track":"Fractional Dynamics and Applications (Janusz Szwabi\u0144ski)"},{"day":"Tuesday","time":"15:30","room":"108","chair":"","name":"Omar Alsayyed","institution":"The Hashemite University, Jordan","title":"A Fast Preconditioning Method for Inverse Source Problems Associated with Time-Fractional Diffusion Equations","track":"Fractional Dynamics and Applications (Janusz Szwabi\u0144ski)"},{"day":"Tuesday","time":"15:30","room":"110","chair":"","name":"Antanas Bendoraitis","institution":"Kaunas University of Technology, Lithuania","title":"New matrix power function creation and investigation for public key cryptography and blockchain","track":"Mathematics for the Digital Factory (Joachim Linn & Dietmar H\u00f6mberg)"},{"day":"Tuesday","time":"15:30","room":"110","chair":"Joachim Linn","name":"Joachim Linn","institution":"Fraunhofer Institute for Industrial Mathematics ITWM, Germany","title":"On a variational approach to compute sequential quasistatic equilibria of cables for automotive applications","track":"Mathematics for the Digital Factory (Joachim Linn & Dietmar H\u00f6mberg)"},{"day":"Tuesday","time":"15:30","room":"110","chair":"","name":"Michael Roller","institution":"Fraunhofer Institute for Industrial Mathematics ITWM, Germany","title":"Model Reduction of Geometrically Exact Shell Models for Real-Time Simulation in Industrial Assembly Planning","track":"Mathematics for the Digital Factory (Joachim Linn & Dietmar H\u00f6mberg)"},{"day":"Tuesday","time":"15:30","room":"110","chair":"","name":"Vicky Holfeld","institution":"Fraunhofer Institute for Industrial Mathematics ITWM, Germany","title":"AI-Based Surrogate Modeling for Real-Time Simulation of Flexible Structures","track":"Mathematics for the Digital Factory (Joachim Linn & Dietmar H\u00f6mberg)"},{"day":"Tuesday","time":"17:15","room":"A1","chair":"","name":"ECMI prize winners","institution":"","title":"","track":""},{"day":"Wednesday","time":"09:00","room":"A1","chair":"","name":"Stefano Maria Iacus","institution":"","title":"Toward a Trusted and Predictable Online World: The Role of Data Science in Enhancing Digital Safety","track":"Plenary 5"},{"day":"Wednesday","time":"10:00","room":"","chair":"","name":"Coffee break","institution":"","title":"","track":""},{"day":"Wednesday","time":"10:30","room":"106","chair":"","name":"Erik Ko\u010dandrle","institution":"Charles University, Czech Republic","title":"Mean-CVaR portfolio optimization with endogenous randomness under fixed dependence structure","track":"Digital Assets, FinTech, and Decentralised Finance (Wolfgang Karl H\u00e4rdle)"},{"day":"Wednesday","time":"10:50","room":"106","chair":"","name":"Kristina Po\u0161kuvien\u0117","institution":"Kaunas University of Technology, Lithuania","title":"Geometric Attractor-Based Analysis of Financial Time Series","track":"Digital Assets, FinTech, and Decentralised Finance (Wolfgang Karl H\u00e4rdle)"},{"day":"Wednesday","time":"11:10","room":"106","chair":"Milo\u0161 Kopa","name":"Milo\u0161 Kopa","institution":"Charles University, Czech Republic","title":"Multicriteria Crypto Portfolio Optimization Based on Preference Rules, Expected Return and Risk Measure","track":"Digital Assets, FinTech, and Decentralised Finance (Wolfgang Karl H\u00e4rdle)"},{"day":"Wednesday","time":"11:30","room":"106","chair":"","name":"Monika Hendrych","institution":"Charles University, Czech Republic","title":"Fairness Axioms and Stochastic Bilevel Optimization in Vaccine Reimbursement Allocation","track":"Digital Assets, FinTech, and Decentralised Finance (Wolfgang Karl H\u00e4rdle)"},{"day":"Wednesday","time":"11:50","room":"106","chair":"","name":"Alla Petukhina","institution":"University of Applied Sciences for Engineering and Economics, Germany","title":"MULTIVARIATE PROBABILISTIC DAY-AHEAD ELECTRICITY PRICE FORECASTING AND\nCROSS-AUCTION TRADING IN THE UK MARKETS","track":"Digital Assets, FinTech, and Decentralised Finance (Wolfgang Karl H\u00e4rdle)"},{"day":"Wednesday","time":"10:30","room":"107","chair":"","name":"Francesc Font","institution":"Universitat Polit\u00e8cnica de Catalunya, Spain","title":"Modelling of Fluid Flow in Column Adsorption for Contaminant Capture","track":"Contaminant capture from the Environment: Mathematical Models and Methods (Timothy Myers (CRM); Francesc Font (UPC); Maria Aguareles (UdG))"},{"day":"Wednesday","time":"10:50","room":"107","chair":"","name":"Abel Valverde","institution":"Polytechnic University of Catalonia, Spain","title":"A mathematical model for the prediction of multicomponent gas chromatography peaks","track":"Contaminant capture from the Environment: Mathematical Models and Methods (Timothy Myers (CRM); Francesc Font (UPC); Maria Aguareles (UdG))"},{"day":"Wednesday","time":"11:10","room":"107","chair":"","name":"Maria Aguareles","institution":"University of Girona, Spain","title":"Impact of non\u2011zero initial conditions on the performance of adsorption columns","track":"Contaminant capture from the Environment: Mathematical Models and Methods (Timothy Myers (CRM); Francesc Font (UPC); Maria Aguareles (UdG))"},{"day":"Wednesday","time":"11:30","room":"107","chair":"","name":"Cristian Moreno-Pulido","institution":"University of Girona, Spain","title":"Pore-Size Effects in Contaminant Adsorption","track":"Contaminant capture from the Environment: Mathematical Models and Methods (Timothy Myers (CRM); Francesc Font (UPC); Maria Aguareles (UdG))"},{"day":"Wednesday","time":"11:50","room":"107","chair":"Marc Calvo-Schwarzw\u00e4lder","name":"Marc Calvo-Schwarzw\u00e4lder","institution":"Polytechnic University of Catalonia, Spain","title":"Mathematical formulation for describing the removal of multiple contaminants by adsorption","track":"Contaminant capture from the Environment: Mathematical Models and Methods (Timothy Myers (CRM); Francesc Font (UPC); Maria Aguareles (UdG))"},{"day":"Wednesday","time":"10:30","room":"108","chair":"Janusz Szwabi\u0144ski","name":"Michal Balcerek","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"Beyond independent diffusion: modeling correlated multidimensional anomalous dynamics","track":"Fractional Dynamics and Applications (Janusz Szwabi\u0144ski)"},{"day":"Wednesday","time":"10:30","room":"108","chair":"","name":"Hubert Woszczek","institution":"Wroc\u0142aw University of Science and Technology, Poland","title":"CYCLOSTATIONARY ANOMALOUS DIFFUSION PROCESS","track":"Fractional Dynamics and Applications (Janusz Szwabi\u0144ski)"},{"day":"Wednesday","time":"10:30","room":"108","chair":"","name":"Ernestas Uzdila","institution":"Kaunas University of Technology, Lithuania","title":"H-rank Based Control Schemes for the Fractional Difference Logistic Map","track":"Fractional Dynamics and Applications (Janusz Szwabi\u0144ski)"},{"day":"Wednesday","time":"10:30","room":"110","chair":"Marek","name":"Ana I. Pereira","institution":"Polytechnic Institute of Bragan\u00e7a, Portugal","title":"Learning with Artificial Intelligence: Shaping the Modern World","track":"Challenges of University Teaching in the Age of Modern Technologies and Artificial Intelligence (Danijela Rajter-Ciric, ECMI Educational Committee)"},{"day":"Wednesday","time":"10:30","room":"110","chair":"","name":"Beatriz Flamia Azevedo","institution":"Polytechnic Institute of Bragan\u00e7a, Portugal","title":"Challenges and Pathways to Inclusive Higher Education Mathematics.","track":"Challenges of University Teaching in the Age of Modern Technologies and Artificial Intelligence (Danijela Rajter-Ciric, ECMI Educational Committee)"},{"day":"Wednesday","time":"10:30","room":"110","chair":"","name":"Claudia Nunes","institution":"Instituto Superior T\u00e9cnico, Portugal","title":"Designing Competitive Erasmus Mundus Joint Master Programmes: Challenges, Strategies, and Lessons Learned","track":"Challenges of University Teaching in the Age of Modern Technologies and Artificial Intelligence (Danijela Rajter-Ciric, ECMI Educational Committee)"},{"day":"Wednesday","time":"10:30","room":"A1","chair":"Ad\u00e9rito Ara\u00fajo","name":"Ad\u00e9rito Ara\u00fajo","institution":"University of Coimbra, Portugal","title":"Mathematical Modeling of Ocular Light Propagation","track":"Mathematical Modelling in Life Sciences  (Milene Santos)"},{"day":"Wednesday","time":"10:30","room":"A1","chair":"","name":"Alessandra Micheletti","institution":"University of Milan, Italy","title":"Computing similarities of protein pockets through embedding in a latent space","track":"Mathematical Modelling in Life Sciences  (Milene Santos)"},{"day":"Wednesday","time":"10:30","room":"A1","chair":"","name":"Raghu Krishna Moorthy","institution":"University College Dublin, Ireland","title":"Mechanistic general rate models for biomicrofluidic systems in translational healthcare applications","track":"Mathematical Modelling in Life Sciences  (Milene Santos)"},{"day":"Wednesday","time":"10:30","room":"A1","chair":"","name":"Vivi Rottschafer","institution":"Leiden University, The Netherlands","title":"Modelling drug dynamics in the brain","track":"Mathematical Modelling in Life Sciences  (Milene Santos)"},{"day":"Wednesday","time":"10:30","room":"A2","chair":"Elisa Calzola","name":"David Nicholas Reynolds","institution":"University of Warsaw, Poland","title":"Graph-induced rotational twisted states in systems of identical oscillators","track":"Recent Advances in Multiscale Interacting-Agent Systems Across Science and Engineering (Giacomo Albi)"},{"day":"Wednesday","time":"10:30","room":"A2","chair":"","name":"Matteo Piu","institution":"University of Verona, Italy","title":"Kinetic Models for Controlled Opinion Evolution in Popularity-Adaptive Networks","track":"Recent Advances in Multiscale Interacting-Agent Systems Across Science and Engineering (Giacomo Albi)"},{"day":"Wednesday","time":"10:30","room":"A2","chair":"","name":"Fabio Marini","institution":"University of Verona, Italy","title":"Optimal magnetic confinement of Vlasov-Poisson system with neural network surrogates","track":"Recent Advances in Multiscale Interacting-Agent Systems Across Science and Engineering (Giacomo Albi)"},{"day":"Wednesday","time":"10:30","room":"A2","chair":"","name":"\u017dydr\u016bnas Bautronis","institution":"Kaunas University of Technology, Lithuania","title":"Adaptive Dynamic Pricing as an Interacting-Agent Decision Process Using Reinforcement Learning (\u017dydr\u016bnas Bautronis, Robertas Alzbutas)","track":"Recent Advances in Multiscale Interacting-Agent Systems Across Science and Engineering (Giacomo Albi)"},{"day":"Wednesday","time":"10:30","room":"A225","chair":"Alessio Fumagalli","name":"Alessio Fumagalli","institution":"Politecnico di Milano, Italy","title":"Mixed finite elements for viscoelasticity","track":"Reduced and Mixed-Dimensional Models for Multiscale Porous Systems (Mayur Pal and Alessio Fumagalli)"},{"day":"Wednesday","time":"10:30","room":"A225","chair":"","name":"Federico Gatti","institution":"ETH Zurich, Switzerland","title":"Nitsche-based mixed finite element discretizations for the seepage problem in Richards\u2019 equation","track":"Reduced and Mixed-Dimensional Models for Multiscale Porous Systems (Mayur Pal and Alessio Fumagalli)"},{"day":"Wednesday","time":"10:30","room":"A225","chair":"","name":"Pijus Makauskas","institution":"Kaunas University of Technology, Lithuania","title":"Stable MPFA Discretization, Neural Surrogates, and a Data-Driven Geothermal Screening Workflow for Lithuanian Subsurface Applications","track":"Reduced and Mixed-Dimensional Models for Multiscale Porous Systems (Mayur Pal and Alessio Fumagalli)"},{"day":"Wednesday","time":"10:30","room":"A225","chair":"","name":"Shruti Malik","institution":"Kaunas University of Technology, Lithuania","title":"Underground hydrogen storage: A pore scale perspective","track":"Reduced and Mixed-Dimensional Models for Multiscale Porous Systems (Mayur Pal and Alessio Fumagalli)"},{"day":"Wednesday","time":"12:00","room":"","chair":"","name":"Lunch","institution":"","title":"","track":""},{"day":"Wednesday","time":"14:00","room":"A1","chair":"","name":"Sigrid Leyendecker","institution":"","title":"From geometry to solutions: enhancing modelling, simulation and control of nonlinear dynamical systems","track":"Plenary 6"},{"day":"Wednesday","time":"15:00","room":"","chair":"","name":"Coffee break","institution":"","title":"","track":""},{"day":"Wednesday","time":"15:30","room":"A1","chair":"Milene Santos","name":"Milene Santos","institution":"University of Coimbra, Portugal","title":"HIGH-ORDER DISCONTINUOUS GALERKIN METHOD FOR CURVED BIOLOGICAL DOMAINS","track":"Mathematical Modelling in Life Sciences  (Milene Santos)"},{"day":"Wednesday","time":"15:30","room":"A1","chair":"","name":"S\u00edlvia Barbeiro","institution":"University of Coimbra, Portugal","title":"RECONSTRUCTION METHODS IN OPTICAL COHERENCE ELASTOGRAPHY","track":"Mathematical Modelling in Life Sciences  (Milene Santos)"},{"day":"Wednesday","time":"15:30","room":"A2","chair":"Federica Ferrarese","name":"Alessandro Baldi","institution":"Politecnico di Torino, Italy","title":"An alternative approach to well-posedness of mean-field SDEs arising in CBO-type models","track":"Advances in Interacting Particle Systems: Modeling, Analysis, and Applications (Sara Veneruso)"},{"day":"Wednesday","time":"15:30","room":"A2","chair":"","name":"Martina Fraia","institution":"Polytechnic University of Turin, Italy","title":"Kinetic models for interactions between agents and external information sources","track":"Advances in Interacting Particle Systems: Modeling, Analysis, and Applications (Sara Veneruso)"},{"day":"Wednesday","time":"15:30","room":"A2","chair":"Federica Ferrarese","name":"William De Deyn","institution":"KU Leuven, Belgium","title":"Mean-Field Limits for Two-Layer Neural Networks Trained with Consensus-Based Optimization","track":"Recent Advances in Multiscale Interacting-Agent Systems Across Science and Engineering (Giacomo Albi)"},{"day":"Wednesday","time":"15:30","room":"A2","chair":"","name":"Sabrina Bonandin","institution":"RWTH Aachen University, Italy","title":"Strong Global Convergence of the Consensus-Based Optimization Algorithm","track":"Recent Advances in Multiscale Interacting-Agent Systems Across Science and Engineering (Giacomo Albi)"},{"day":"Wednesday","time":"15:30","room":"A225","chair":"Pijus Makauskas","name":"Stefano Galati","institution":"University of Bergen, Norway","title":"Upscaling mechanics for gigaton-scale CO2 storage","track":"Reduced and Mixed-Dimensional Models for Multiscale Porous Systems (Mayur Pal and Alessio Fumagalli)"},{"day":"Wednesday","time":"15:30","room":"A225","chair":"","name":"Stefano Scialo","institution":"Politecnico di Torino, Italy","title":"Optimization Based domain decomposition and operator splitting for simulations in mixed dimensional domains","track":"Reduced and Mixed-Dimensional Models for Multiscale Porous Systems (Mayur Pal and Alessio Fumagalli)"},{"day":"Wednesday","time":"15:30","room":"106","chair":"","name":"Andrii Bilych","institution":"National Technical University of Ukraine, Ukraine","title":"SE(3)-Equivariant Neural Networks for Prediction of $^1$H NMR Chemical Shifts","track":"Biology and Medicine"},{"day":"Wednesday","time":"15:30","room":"106","chair":"Kevin Moroney","name":"Gabija Pranaityt\u0117","institution":"Kaunas university of technology,  Lithuania","title":"Constrained Energy Minimization of Sequence-Dependent DNA in a Nucleosome: The Choice of Optimization Constraints","track":"Biology and Medicine"},{"day":"Wednesday","time":"15:30","room":"106","chair":"","name":"Kevin Moroney","institution":"University of Limerick, Limerick, Ireland","title":"Modelling the impact of solvent infiltration on drug release from porous granules","track":"Biology and Medicine"},{"day":"Wednesday","time":"15:30","room":"106","chair":"","name":"Peter Boldog","institution":"University of Szeged, Hungary","title":"How Programmed Cell Death Shapes Cell Population Dynamics","track":"Biology and Medicine"},{"day":"Wednesday","time":"15:30","room":"108","chair":"","name":"Jasmina Angelevska Kostadinoska","institution":"Ss. Cyril and Methodius University in Skopje, North Macedonia","title":"Numerical methods for approximating the Assouad and lower dimensions","track":"Dynamical Systems in Mathematical Biology and Epidemiology (Thomas Goetz)"},{"day":"Wednesday","time":"15:50","room":"108","chair":"","name":"Jean-Guy Caputo","institution":"Normandie Universit\u00e9, Saint-Etienne-du-Rouvray, France","title":"Epidemic on a geographic network: analysis and vaccination strategy","track":"Dynamical Systems in Mathematical Biology and Epidemiology (Thomas Goetz)"},{"day":"Wednesday","time":"16:10","room":"108","chair":"","name":"Mohd Kashif Ansari","institution":"University of Koblenz, Germany","title":"Optimal control of cattle grazing model","track":"Dynamical Systems in Mathematical Biology and Epidemiology (Thomas Goetz)"},{"day":"Wednesday","time":"16:30","room":"108","chair":"Thomas Goetz","name":"Thomas Goetz","institution":"University of Koblenz, Germany","title":"Coupling Social and Epidemiological Models","track":"Dynamical Systems in Mathematical Biology and Epidemiology (Thomas Goetz)"},{"day":"Wednesday","time":"15:30","room":"110","chair":"Ellen Luckins","name":"Ellen Luckins","institution":"University of Warwick, United Kingdom","title":"Multiscale modelling of latent heat batteries","track":"Energy Systems"},{"day":"Wednesday","time":"15:30","room":"110","chair":"","name":"Ferran Brosa Planella","institution":"University of Warwick, United Kingdom","title":"Towards Reliable Degradation Modelling in Lithium\u2011Ion Batteries: A Consistent Multiscale Approach","track":"Energy Systems"},{"day":"Wednesday","time":"18:00","room":"","chair":"","name":"Excursion","institution":"","title":"","track":""},{"day":"Thursday","time":"09:00","room":"A1","chair":"","name":"Industry speakers","institution":"","title":"","track":""},{"day":"Thursday","time":"10:30","room":"A1","chair":"","name":"Coffee break","institution":"","title":"","track":""},{"day":"Thursday","time":"11:00","room":"A1","chair":"","name":"Lanczos prize winners","institution":"","title":"","track":""},{"day":"Thursday","time":"12:00","room":"A1","chair":"","name":"Lunch","institution":"","title":"","track":""},{"day":"Thursday","time":"14:00","room":"A1","chair":"","name":"Industry speakers","institution":"","title":"","track":""},{"day":"Thursday","time":"15:00","room":"A1","chair":"","name":"Coffee break","institution":"","title":"","track":""},{"day":"Thursday","time":"15:30","room":"A1","chair":"","name":"Panel discusion","institution":"","title":"","track":""},{"day":"Thursday","time":"18:00","room":"A1","chair":"","name":"ECMI social dinner at Science museum (island in city centre, check map)","institution":"","title":"","track":""},{"day":"Friday","time":"09:00","room":"A1","chair":"","name":"Mayur Pal","institution":"Kaunas University of Technology, Lithuania","title":"The Role of Mathematics and AI in Accelerating the Energy Transition: Applications in CCUS, Geothermal Systems, and Hydrogen Storage","track":"Plenary 7"},{"day":"Friday","time":"10:00","room":"","chair":"","name":"Coffee break","institution":"","title":"","track":""},{"day":"Friday","time":"10:30","room":"A1","chair":"Sabrina Bonandin","name":"Federica Ferrarese","institution":"Universit\u00e0 degli Studi di Ferrara, Italy","title":"Particle-based approaches for enhanced exploration in global optimization","track":"Advances in Interacting Particle Systems: Modeling, Analysis, and Applications (Sara Veneruso)"},{"day":"Friday","time":"10:30","room":"A1","chair":"","name":"Edvinas Juozapaitis","institution":"Kaunas University of Technology, Lithuania","title":"Adaptive Particle Markov Chain Monte Carlo for lithium-ion battery state estimation","track":"Advances in Interacting Particle Systems: Modeling, Analysis, and Applications (Sara Veneruso)"},{"day":"Friday","time":"10:30","room":"A1","chair":"","name":"Elisa Calzola","institution":"University of Ferrara, Italy","title":"Learning interaction kernels in stochastic multi-agent systems via binary and mean-field interactions","track":"Advances in Interacting Particle Systems: Modeling, Analysis, and Applications (Sara Veneruso)"},{"day":"Friday","time":"10:30","room":"A1","chair":"","name":"Sara Veneruso","institution":"University of Ferrara, Italy","title":"Exploiting intrinsic structure in high-dimensional Consensus-Based Optimization","track":"Advances in Interacting Particle Systems: Modeling, Analysis, and Applications (Sara Veneruso)"},{"day":"Friday","time":"10:30","room":"A2","chair":"","name":"Matthias Ehrhardt","institution":"University of Wuppertal, Germany","title":"Computational Methods for Finance and Energy Markets","track":"ECMI SIG: Computational Methods for Finance and Energy Markets (Matthias Ehrhardt, Rafa\u0142 Weron)"},{"day":"Friday","time":"12:00","room":"","chair":"","name":"Lunch","institution":"","title":"","track":""},{"day":"Friday","time":"14:00","room":"A1","chair":"","name":"Rita Laura D'Ecclesia","institution":"","title":"Integrated Risk Management: How Insurance and Banking Converge in the Era of Financial Innovation","track":"Plenary 8"},{"day":"Friday","time":"15:00","room":"","chair":"","name":"Coffee break","institution":"","title":"","track":""},{"day":"Friday","time":"15:30","room":"","chair":"","name":"Closing","institution":"","title":"","track":""}];
+    source.push({
+      day: 'Monday',
+      time: '08:30',
+      room: 'A1',
+      chair: '',
+      name: 'Opening ceremony',
+      institution: '',
+      title: '',
+      track: '',
+    });
+    const ecmiPrizeEvent = source.find(row => row.day === 'Tuesday' && row.time === '17:15' && row.name.toLowerCase() === 'ecmi prize winners');
+    if (ecmiPrizeEvent) {
+      ecmiPrizeEvent.name = 'Anile-ECMI Prize winner 1';
+      ecmiPrizeEvent.chair = 'Marek Teuerle';
+    }
+    source.push(
+      {
+        day: 'Tuesday', time: '17:45', room: 'A1', chair: 'Marek Teuerle',
+        name: 'Anile-ECMI Prize winner 2', institution: '', title: '', track: ''
+      },
+      {
+        day: 'Tuesday', time: '18:15', room: 'A1', chair: 'Marek Teuerle',
+        name: 'Hansjörg Wacker Memorial Prize winner', institution: '', title: '', track: ''
+      }
+    );
+    const dayOrder = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+    const conferenceDates = {
+      Monday: '2026-06-29',
+      Tuesday: '2026-06-30',
+      Wednesday: '2026-07-01',
+      Thursday: '2026-07-02',
+      Friday: '2026-07-03'
+    };
+    const plenarySpeakers = {
+      'Mayur Pal': {
+        institution: 'Kaunas University of Technology, Lithuania',
+        chair: 'Audrius Kabasinskas',
+        field: 'Energy Systems',
+        profile: 'https://en.ktu.edu/scientist/mayur.pal/'
+      },
+      'Sigrid Leyendecker': {
+        institution: 'Friedrich Alexander Universität Erlangen-Nürnberg, Germany',
+        chair: 'Joachim Linn',
+        field: 'Dynamics and Numerical Methods',
+        profile: 'https://www.ltd.tf.fau.de/sigrid-leyendecker/'
+      },
+      'Paweł Dłotko': {
+        institution: 'Polish Academy of Science, Poland',
+        chair: 'Agnieszka Wyłomańska',
+        field: 'Cybersecurity and Theory of Computation, Machine Learning',
+        profile: 'https://dioscuri-tda.org/members/pawel.html'
+      },
+      "Rita Laura D'Ecclesia": {
+        displayName: 'Rita Laura D’Ecclesia',
+        institution: 'Sapienza University of Rome, Italy',
+        chair: 'Audrius Kabasinskas',
+        field: 'Economics, Finance and Insurance',
+        profile: 'https://www.dss.uniroma1.it/it/dipartimento/persone/decclesia-rita-laura'
+      },
+      'Paola F. Antonietti': {
+        displayName: 'Paola Francesca Antonietti',
+        institution: 'Politecnico di Milano, Italy',
+        chair: 'Sílvia Barbeiro',
+        field: 'Social and Humanitarian Challenges',
+        profile: 'https://antonietti.faculty.polimi.it/'
+      },
+      'Stefano Maria Iacus': {
+        institution: 'European Commission, Joint Research Centre, Spain; Institute for Quantitative Social Science, Harvard University, USA',
+        chair: 'Alessandra Micheletti',
+        field: 'Data Science and Statistics',
+        profile: 'https://www.linkedin.com/in/siacus/'
+      },
+      'Lorenzo Pareschi': {
+        institution: 'Heriot-Watt University, United Kingdom; University of Ferrara, Italy',
+        chair: 'Timothy Myers',
+        field: 'Mathematical and Applied Physics',
+        profile: 'https://researchportal.hw.ac.uk/en/persons/lorenzo-pareschi/'
+      },
+      'Marta Fiocco': {
+        institution: 'Leiden University, the Netherlands',
+        chair: 'Alessandra Micheletti',
+        field: 'Biology and Medicine or Ecology and Earth Sciences',
+        profile: 'https://www.universiteitleiden.nl/en/staffmembers/marta-fiocco#tab-1'
+      }
+    };
+    const plenaryAbstracts = {"Marta Fiocco":"Time-varying confounders pose a major challenge in causal inference because they both both influence and are influenced by prior treatments and outcomes. When longitudinal covariates contain multiple categorical levels, the number of possible covariate combinations can rapidly increase, leading to sparse or empty data cells that violate the positivity assumption and complicate causal estimation. These challenges become even greater when confounders are latent, since the underlying disease state must be inferred from noisy observations, potentially introducing misclassification bias. Rather than assuming exact identification of latent states from observed data, it is more realistic to estimate state membership probabilities or relative risks of experiencing one latent condition versus another over time. We propose a two-step causal inference approach to estimate the effect of a time-varying exposure on a survival outcome when the causal relationship is confounded by visit-specific relative risks of latent disease states. In the first step, a latent Markov model is used to reduce the high-dimensional space of observed longitudinal covariates into time-varying relative risks associated with latent states. In the second step, marginal structural models (MSMs) are applied to estimate treatment effects under different exposure histories using inverse probability weighting to account for both treatment assignment and censoring due to dropout. Average treatment effects (ATEs) are quantified as differences in restricted mean survival time under alternative exposure strategies. We illustrate the proposed approach using data from the Euro Ewing 2012 trial, which evaluated chemotherapy adjustment strategies in patients with Ewing sarcoma, a particularly challenging setting because of chemotherapy-induced toxicities. Latent disease states represent overall toxicity conditions during therapy, inferred from the observed severity of multiple adverse events. Cycle-specific relative risks of latent overall toxicity were incorporated as confounders when estimating the effect of a bivariate time-varying exposure (dose reductions and cycle delays) on event-free survival (EFS). To evaluate the EFS benefits of different treatment-adjustment strategies, the estimated ATEs were compared with those from the per-protocol strategy (never reduced, never delayed) across multiple MSM specifications.","Paola F. Antonietti":"Neurodegenerative diseases (NDs) are disorders characterized by progressive structural and functional damage to the brain. A common hallmark of many NDs is the accumulation of disease-specific misfolded and aggregated proteins; examples include amyloid-beta and tau in Alzheimer s disease, or alpha-synuclein in Parkinson\u2019s disease. In this talk, we present a novel framework that integrates multiphysics mathematical modeling, advanced discretization methods, and computational learning algorithms to understand the mechanisms of neurodegeneration. First, we discuss the spatiotemporal dynamics of misfolded proteins through advanced conformational conversion models discretized by high-order discontinuous Galerkin methods on polytopal grids [1,2]. Then, we present multiphysics mathematical models of cerebral waste-clearance dynamics [3] a critical factor influencing the onset and progression of NDs and tissue atrophy [4], and discuss how neurodegeneration-associated pathological processes may increase the likelihood of epileptiform activity [5]. We present extensive numerical simulations of patient-specific brain geometries reconstructed from clinical imaging to validate the proposed approaches. If time permits, we introduce an integrated computational learning framework for predicting personalized trajectories of ND progression from sparse, irregularly sampled, and multimodal clinical data. This approach exploits Neural ODEs to infer latent disease states and predict biomarker evolution, offering a promising pathway toward personalized modeling of NDs.","Pawe\u0142 D\u0142otko":"While the data revolution has brought unprecedented quantities of information, many challenges in science and industry still arise from complex, heterogeneous, or limited datasets. Across all these settings, the shape of data, its intrinsic organization and geometry, often encodes essential information that standard statistical or machine learning tools overlook. Topological Data Analysis (TDA) provides a rigorous mathematical framework to extract, visualize, and quantify this shape, offering insights that remain robust even when data are sparse or noisy. In this talk, I will demonstrate how TDA enables explainable exploration of complex datasets across domains such as materials science, manufacturing, and biomedical research. By capturing structural and dynamical features in a compact geometric form, TDA not only supports industrial decision-making and data-driven modeling but also offers a transparent and interpretable representation of the underlying processes. This topological explainability allows one to link observed data structures to physical mechanisms, biological organization, or functional behavior, bridging the gap between data and theory. Beyond static analysis, I will show how topological summaries can be used to study dynamics: reconstructing system trajectories, identifying transitions, and revealing how the geometry of data evolves over time. Through this perspective, TDA emerges as a tool that connects physics, data science, and interpretability, reminding us that in understanding complex systems, shape truly matters.","Lorenzo Pareschi":"Fusion energy promises a virtually inexhaustible, carbon-free power source by reproducing on Earth the same processes that fuel the Sun. The quest for controlled nuclear fusion brings together some of the most fascinating and challenging problems in applied mathematics. Plasmas, ionised gases governed by kinetic and electromagnetic interactions, exhibit extreme multiscale behaviour, from nonlocal transport to macroscopic confinement and turbulence. Developing models and algorithms capable of capturing this complexity, while remaining computationally tractable, lies at the core of mathematical plasma science. This lecture will outline recent progress in structure-preserving and asymptotic-preserving numerical methods that bridge kinetic and fluid descriptions, and in hybrid deterministic particle approaches that enable realistic simulations of collisional, magnetised plasmas. I will also discuss model predictive control strategies and emerging operator-learning techniques, including tensor neural networks and physics-informed architectures, that allow data-driven model reduction and real-time control while maintaining physical consistency.","Stefano Maria Iacus":"Digital platforms have become critical environments where information spreads, collective behaviours form, and societal risks can escalate rapidly and endogenously. This talk examines how data science can contribute to a safer, more predictable, and more trusted online world. Several risks that arise naturally from technological features of today\u2019s digital ecosystems, such as end-to-end AI recommender systems, AI companions, age-verification challenges, online fraud, and other emerging harms, can be better understood and mitigated through robust data-science pipelines. Europe\u2019s Digital Services Act, particularly Article 40(12), now guarantees controlled data access for vetted researchers. This provision represents a major opportunity for the data-science community: for the first time, independent scholars can systematically study platform dynamics, audit algorithmic systems, and generate evidence that contributes directly to safer, more transparent, and accountable digital environments. Therefore, this talk will also discuss how this new opportunity enables data scientists to play a more active and impactful role in improving online safety. Overall, the talk presents a unified vision: data science, supported by responsible governance and meaningful data access, provides essential capabilities for building digital ecosystems that are safer, more predictable, and worthy of public trust.","Sigrid Leyendecker":"Virtual prototyping has become a vital component in modern industrial product development, significantly enhancing the design process while minimizing costs and improving product performance. This talk will delve into the ongoing research focused on developing accurate mathematical models that capture the nonlinear behavior of dynamical systems, along with efficient numerical methods for simulation. Adopting a geometric perspective when studying nonlinear mechanical systems reveals that symmetries and invariants provide critical insights into their behaviour. Leveraging these structural properties, we can create numerical methods that preserve the geometric essence of the systems, such as variational integrators that maintain symplectic-momentum conservation. These structure-preserving simulation tools enhance the fidelity of the numerical solutions by accurately reflecting symmetries and invariants, while also stabilising the integration process. This stability is crucial for optimising computational efficiency, particularly regarding grid resolution and long-term simulations. The importance of reliable and efficient simulations is further amplified within the realm of optimisation and control of dynamical systems, as for example with regard to soft robotic systems. These systems utilise smart and compliant actuators, showcase energy efficiency and safe interaction capabilities, making them increasingly relevant in industrial production, medical applications, and everyday life. This talk will highlight the advantages of employing a geometric framework for the modeling, simulation, and optimal control of nonlinear dynamical systems, demonstrating its potential in various application fields.","Mayur Pal":"The global energy transition requires innovative solutions to achieve large-scale decarbonization, integrate renewable energy, and enhance energy security. This plenary talk explores how mathematics and artificial intelligence (AI) are transforming subsurface energy technologies, with a focus on carbon capture, utilization, and storage (CCUS), geothermal energy systems, and underground hydrogen storage. By integrating advanced mathematical modeling, high-performance computational simulations, and machine learning techniques, we demonstrate how geological uncertainties in subsurface systems can be addressed more efficiently and reliably. Case studies will present both experimental and simulation-based results, ranging from microfluidic investigations to reservoir-scale models, highlighting the critical role of data-driven approaches in accelerating system design, monitoring, and optimization. The talk will further examine AI-enabled methods for predictive modeling, uncertainty quantification, and decision support in subsurface energy storage and CO2 sequestration. Particular emphasis will be placed on emerging techniques such as surrogate modeling and physics-informed neural networks, which significantly improve computational efficiency, scalability, and predictive reliability. By bridging theory, computation, and practical application, this presentation provides a forward-looking perspective on how mathematical sciences and AI-driven technologies can foster innovation and support the development of safe, efficient, and sustainable energy systems for the future.","Rita Laura D'Ecclesia":"The progressive convergence of insurance and banking is reshaping the architecture of modern financial systems, driven by increasing interdependencies in risk management, capital allocation, and regulatory requirements. In the aftermath of the global financial crisis, the introduction of Solvency II and Basel III has established risk-sensitive supervisory regimes that, while sector-specific, exhibit growing conceptual and quantitative overlap in their treatment of market and credit risks. This paper investigates the quantitative linkages between these frameworks, with particular emphasis on the interaction between internal models for credit spread risk under Solvency II and market risk models under Basel III. We examine how these models behave under stressed market conditions, highlighting differences in calibration, capital sensitivity, and the treatment of tail risk. Existing literature points to significant discrepancies in capital requirements across the two regimes, which may create inconsistencies and potential regulatory arbitrage opportunities. Using empirical evidence from backtesting exercises, we analyze breach patterns across rating classes and maturities, with a focus on the stability of model performance across changing volatility regimes. The findings reveal that regime shifts and market turbulence pose substantial challenges to calibration, particularly in the presence of procyclical mechanisms embedded in risk-sensitive capital frameworks. In this context, the role of volatility adjustments and spread dynamics within Solvency II is examined, as these mechanisms aim to mitigate excessive sensitivity to short-term market dislocations. Building on these insights, we explore integrated stress-testing approaches that combine solvency and liquidity perspectives across banking and insurance balance sheets. Stress testing, a cornerstone of Basel III risk management, provides a natural bridge between the two sectors by enabling forward-looking assessments of systemic vulnerabilities. We propose joint liquidity\u2013solvency metrics designed to enhance resilience, improve capital efficiency, and reduce procyclicality in interconnected financial systems. Overall, the paper contributes to the literature on integrated risk management by offering a cross-sectoral perspective on model design, calibration, and regulatory alignment. It provides actionable insights for financial institutions seeking to optimize risk-adjusted returns while maintaining robustness in an increasingly integrated and volatile financial environment."};
+    const $ = id => document.getElementById(id);
+
+    function minutes(value) {
+      const parts = String(value).split(':').map(Number);
+      return parts[0] * 60 + parts[1];
+    }
+
+    function activityDateTime(row) {
+      return new Date(`${conferenceDates[row.day]}T${row.time}:00+03:00`);
+    }
+
+    function activityType(row) {
+      const name = row.name.toLowerCase();
+      if (row.track.toLowerCase().startsWith('plenary')) return 'plenary';
+      if (name.includes('coffee break')) return 'break';
+      if (name === 'lunch') return 'meal';
+      if (/(reception|excursion|social dinner)/.test(name)) return 'social';
+      if (/(opening ceremony|industry speakers|lanczos prize|anile-ecmi prize winner|wacker memorial prize winner|panel discusion|closing)/.test(name)) return 'programme';
+      return 'parallel';
+    }
+
+    function isEcmiPrizeTalk(row) {
+      return /anile-ecmi prize winner|wacker memorial prize winner/i.test(row.name);
+    }
+
+    function approximatePeriod(row) {
+      const time = minutes(row.time);
+      if (time < 13 * 60) return 'morning';
+      if (time <= 17 * 60) return 'afternoon';
+      return 'evening';
+    }
+
+    function blockKey(row) {
+      const type = activityType(row);
+      const time = minutes(row.time);
+      if (isEcmiPrizeTalk(row)) return '17:15';
+      if (type === 'parallel' && time >= 10 * 60 + 30 && time < 12 * 60) return '10:30';
+      if (type === 'parallel' && time >= 15 * 60 + 30 && time <= 17 * 60) return '15:30';
+      if (type === 'parallel' && time >= 17 * 60 + 15 && time < 19 * 60) return '17:15';
+      return row.time;
+    }
+
+    function blockLabel(rows, key) {
+      const types = new Set(rows.map(activityType));
+      if (rows.some(isEcmiPrizeTalk)) return 'ECMI prize winners';
+      if (types.has('parallel')) {
+        if (key === '10:30') return 'Morning parallel sessions';
+        if (key === '15:30') return 'Afternoon parallel sessions';
+        if (key === '17:15') return 'Late parallel sessions';
+      }
+      if (types.has('plenary')) return 'Plenary talk';
+      if (types.has('break')) return 'Coffee break';
+      if (types.has('meal')) return 'Lunch';
+      if (types.has('social')) return 'Social programme';
+      return 'Special activities';
+    }
+
+    function esc(value) {
+      return String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    }
+
+    function highlighted(value, query) {
+      const safe = esc(value);
+      if (!query) return safe;
+      const pattern = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return safe.replace(new RegExp(pattern, 'ig'), match => `<mark>${match}</mark>`);
+    }
+
+    function linkedMapText(value, query) {
+      const match = String(value).match(/map/i);
+      if (!match) return highlighted(value,query);
+      const start = match.index;
+      return `${highlighted(value.slice(0,start),query)}<a class="inline-map" href="https://maps.app.goo.gl/GSkttjqaCK51Hdky7" target="_blank" rel="noopener">${highlighted(match[0],query)}</a>${highlighted(value.slice(start + match[0].length),query)}`;
+    }
+
+    function groupBy(items, keyFn) {
+      return items.reduce((map, item) => {
+        const key = keyFn(item);
+        if (!map.has(key)) map.set(key, []);
+        map.get(key).push(item);
+        return map;
+      }, new Map());
+    }
+
+    function renderParallel(rows, query) {
+      const sessions = groupBy(rows, row => `${row.room}|||${row.track}`);
+      return [...sessions.entries()].map(([key, talks]) => {
+        const [room, track] = key.split('|||');
+        const chair = talks.find(talk => talk.chair)?.chair || '';
+        const sessionType = track.includes('(') && track.includes(')') ? 'Mini-symposium' : 'Field session';
+        talks.sort((a,b) => minutes(a.time)-minutes(b.time) || a.name.localeCompare(b.name));
+        return `<details class="session-card" ${query ? 'open' : ''}>
+          <summary class="session-head">
+            <div>
+              <p class="session-type">${sessionType}</p>
+              <h4>${highlighted(track || 'General session', query)}</h4>
+            <div class="session-meta"><span><strong>Room:</strong> ${highlighted(room || 'TBA',query)}</span>${chair ? `<span><strong>Chair:</strong> ${highlighted(chair,query)}</span>` : ''}</div>
+            </div>
+          </summary>
+          <ol class="talk-list">${talks.map(talk => `<li class="talk">
+            <time class="talk-time">${esc(talk.time)}</time>
+            <div>
+              <p class="speaker">${highlighted(talk.name,query)}${talk.institution ? `<span class="speaker-institution"> (${highlighted(talk.institution,query)})</span>` : ''}</p>
+              <p class="talk-title">${highlighted(talk.title,query)}</p>
+            </div>
+          </li>`).join('')}</ol>
+        </details>`;
+      }).join('');
+    }
+
+    function renderSingle(row, query) {
+      const type = activityType(row);
+      const labels = {
+        plenary:'Plenary talk', break:'Coffee break', meal:'Lunch', social:'Social activity', programme:'Special activity'
+      };
+      return `<article class="session-card ${type === 'programme' ? 'programme-item' : type}">
+        <header class="session-head">
+          <p class="session-type">${labels[type]}</p>
+          <div class="session-meta">${row.room ? `<span><strong>Room:</strong> ${esc(row.room)}</span>` : ''}</div>
+        </header>
+        <div class="single-item">
+          <p class="single-name">${highlighted(row.name,query)}${row.institution ? `<span class="speaker-institution"> (${highlighted(row.institution,query)})</span>` : ''}</p>
+          ${row.title ? `<p class="single-title">${highlighted(row.title,query)}</p>` : ''}
+        </div>
+      </article>`;
+    }
+
+    function renderPrizeSession(rows, query) {
+      const talks = [...rows].sort((a,b) => minutes(a.time)-minutes(b.time));
+      const chair = talks.find(row => row.chair)?.chair || '';
+      return `<article class="session-card programme-item">
+        <header class="session-head">
+          <h4>ECMI prize winners</h4>
+          <div class="session-meta">${chair ? `<span><strong>Session chair:</strong> ${highlighted(chair,query)}</span>` : ''}</div>
+        </header>
+        <ol class="talk-list">${talks.map(talk => `<li class="talk">
+          <time class="talk-time">${esc(talk.time)}</time>
+          <div><p class="speaker">${highlighted(talk.name,query)}</p></div>
+        </li>`).join('')}</ol>
+      </article>`;
+    }
+
+    const days = [...new Set(source.map(row => row.day))].sort((a,b) => dayOrder.indexOf(a)-dayOrder.indexOf(b));
+
+    function render() {
+      const query = $('searchFilter').value.trim().toLowerCase();
+      const includePast = $('fullProgramme').checked;
+      const now = new Date();
+      const rows = source.filter(row => {
+        const plenary = plenarySpeakers[row.name] || {};
+        const haystack = [row.name,row.title,row.track,row.room,row.institution,row.chair,plenary.displayName,plenary.institution,plenary.chair,plenaryAbstracts[row.name]].join(' ').toLowerCase();
+        return (includePast || activityDateTime(row) >= now) && (!query || haystack.includes(query));
+      });
+
+      $('emptyState').style.display = rows.length ? 'none' : 'block';
+      const html = days.map((day, dayIndex) => {
+        const dayRows = rows.filter(row => row.day === day);
+        if (!dayRows.length) return '';
+        const blocks = groupBy(dayRows, blockKey);
+        const times = [...blocks.entries()].sort((a,b) => minutes(a[0])-minutes(b[0])).map(([key, blockRows]) => {
+          const parallel = blockRows.filter(row => activityType(row) === 'parallel');
+          const prizeTalks = blockRows.filter(isEcmiPrizeTalk);
+          const singles = blockRows.filter(row => activityType(row) !== 'parallel' && !isEcmiPrizeTalk(row));
+          const rooms = [...new Set([...parallel,...prizeTalks].map(row => row.room).filter(Boolean))].sort((a,b) => a.localeCompare(b,undefined,{numeric:true}));
+          const cards = [renderParallel(parallel,query), prizeTalks.length ? renderPrizeSession(prizeTalks,query) : '', ...singles.map(row => renderSingle(row,query))].filter(Boolean).join('');
+          if (blockRows.length === 1) {
+            const row = blockRows[0];
+            const mainText = row.name || row.title || blockLabel(blockRows,key);
+            if (activityType(row) === 'plenary') {
+              const speaker = plenarySpeakers[row.name] || { institution: row.institution, field: '', profile: '' };
+              const abstractMatches = query && plenaryAbstracts[row.name]?.toLowerCase().includes(query);
+              return `<details class="plenary-row" ${query ? 'open' : ''}>
+                <summary class="plenary-summary">
+                  <time>${esc(key)}</time>
+                  <span class="plenary-label">Plenary talk</span>
+                  <span class="plenary-main"><strong>${highlighted(speaker.displayName || row.name,query)}</strong><span class="standalone-title">${highlighted(row.title,query)}</span></span>
+                  ${row.room ? `<span class="standalone-room">Room ${highlighted(row.room,query)}</span>` : ''}
+                </summary>
+                <div class="plenary-details">
+                  ${speaker.institution ? `<p><strong>Institution:</strong> ${highlighted(speaker.institution,query)}</p>` : ''}
+                  ${speaker.chair ? `<p><strong>Session chair:</strong> ${highlighted(speaker.chair,query)}</p>` : ''}
+                  <div class="plenary-actions">
+                    ${speaker.profile ? `<a href="${esc(speaker.profile)}" target="_blank" rel="noopener">Speaker profile</a>` : ''}
+                    ${plenaryAbstracts[row.name] ? `<details class="abstract-details" ${abstractMatches ? 'open' : ''}><summary>Abstract</summary><p>${highlighted(plenaryAbstracts[row.name],query)}</p></details>` : ''}
+                  </div>
+                </div>
+              </details>`;
+            }
+            const isSocialDinner = row.day === 'Thursday' && row.time === '18:00' && row.name.toLowerCase().includes('social dinner');
+            return `<section class="time-standalone"><div class="standalone-row no-type">
+              <time>${esc(key)}</time>
+              <span class="standalone-main"><strong>${isSocialDinner ? linkedMapText(mainText,query) : highlighted(mainText,query)}${row.institution ? `<span class="speaker-institution"> (${highlighted(row.institution,query)})</span>` : ''}</strong>${row.title && row.title !== mainText ? `<span class="standalone-title">${highlighted(row.title,query)}</span>` : ''}</span>
+              ${row.room || row.chair ? `<span class="standalone-room">${row.room ? `Room ${highlighted(row.room,query)}` : ''}${row.room && row.chair ? ' · ' : ''}${row.chair ? `Session chair: ${highlighted(row.chair,query)}` : ''}</span>` : ''}
+            </div></section>`;
+          }
+          return `<details class="time-accordion" ${query ? 'open' : ''}>
+            <summary class="time-summary">
+              <time>${esc(key)}</time>
+              <strong>${blockLabel(blockRows,key)}</strong>
+              ${rooms.length ? `<span class="block-rooms">${rooms.length === 1 ? 'Room' : 'Rooms'} ${rooms.map(esc).join(', ')}</span>` : ''}
+            </summary>
+            <div class="time-group"><div class="session-grid">${cards}</div></div>
+          </details>`;
+        }).join('');
+        return `<details class="day-accordion" ${query || dayIndex === 0 ? 'open' : ''}>
+          <summary class="day-summary"><span>${esc(day)}</span></summary>
+          <div class="day-content">${times}</div>
+        </details>`;
+      }).join('');
+      $('schedule').innerHTML = html;
+      if (query.length >= 2) {
+        requestAnimationFrame(() => {
+          const firstMatch = $('schedule').querySelector('mark');
+          if (firstMatch) firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      }
+    }
+
+    $('searchFilter').addEventListener('input',render);
+    $('fullProgramme').addEventListener('change',render);
+    $('clearBtn').addEventListener('click',() => {
+      $('searchFilter').value = '';
+      $('fullProgramme').checked = false;
+      render();
+    });
+    render();
+  </script>
+</body>
+</html>
