@@ -423,6 +423,11 @@
       return /anile-ecmi prize winner|wacker memorial prize winner/i.test(row.name);
     }
 
+    function isIndustrySpeaker(row) {
+      const time = minutes(row.time);
+      return row.day === 'Thursday' && ((time >= 9 * 60 + 25 && time <= 10 * 60 + 5) || (time >= 14 * 60 && time <= 14 * 60 + 40));
+    }
+
     function approximatePeriod(row) {
       const time = minutes(row.time);
       if (time < 13 * 60) return 'morning';
@@ -434,6 +439,8 @@
       const type = activityType(row);
       const time = minutes(row.time);
       if (isEcmiPrizeTalk(row)) return '17:15';
+      if (isIndustrySpeaker(row) && time < 12 * 60) return '09:25';
+      if (isIndustrySpeaker(row)) return '14:00';
       if (type === 'parallel' && time >= 10 * 60 + 30 && time < 12 * 60) return '10:30';
       if (type === 'parallel' && time >= 15 * 60 + 30 && time <= 17 * 60) return '15:30';
       if (type === 'parallel' && time >= 17 * 60 + 15 && time < 19 * 60) return '17:15';
@@ -443,6 +450,7 @@
     function blockLabel(rows, key) {
       const types = new Set(rows.map(activityType));
       if (rows.some(isEcmiPrizeTalk)) return 'ECMI prize winners';
+      if (rows.some(isIndustrySpeaker)) return 'Industry speakers';
       if (types.has('parallel')) {
         if (key === '10:30') return 'Morning parallel sessions';
         if (key === '15:30') return 'Afternoon parallel sessions';
@@ -540,6 +548,25 @@
       </article>`;
     }
 
+    function renderIndustrySession(rows, query) {
+      const talks = [...rows].sort((a,b) => minutes(a.time)-minutes(b.time));
+      const chair = talks.find(row => row.chair)?.chair || '';
+      const rooms = [...new Set(talks.map(row => row.room).filter(Boolean))].sort((a,b) => a.localeCompare(b,undefined,{numeric:true}));
+      return `<article class="session-card programme-item">
+        <header class="session-head">
+          <h4>Industry speakers</h4>
+          <div class="session-meta">${rooms.length ? `<span><strong>${rooms.length === 1 ? 'Room' : 'Rooms'}:</strong> ${rooms.map(room => highlighted(room,query)).join(', ')}</span>` : ''}${chair ? `<span><strong>Session chair:</strong> ${highlighted(chair,query)}</span>` : ''}</div>
+        </header>
+        <ol class="talk-list">${talks.map(talk => `<li class="talk">
+          <time class="talk-time">${esc(talk.time)}</time>
+          <div>
+            <p class="speaker">${highlighted(talk.name,query)}${talk.institution ? `<span class="speaker-institution"> (${highlighted(talk.institution,query)})</span>` : ''}</p>
+            ${talk.title ? `<p class="talk-title">${highlighted(talk.title,query)}</p>` : ''}
+          </div>
+        </li>`).join('')}</ol>
+      </article>`;
+    }
+
     const days = [...new Set(source.map(row => row.day))].sort((a,b) => dayOrder.indexOf(a)-dayOrder.indexOf(b));
 
     function render() {
@@ -560,9 +587,10 @@
         const times = [...blocks.entries()].sort((a,b) => minutes(a[0])-minutes(b[0])).map(([key, blockRows]) => {
           const parallel = blockRows.filter(row => activityType(row) === 'parallel');
           const prizeTalks = blockRows.filter(isEcmiPrizeTalk);
-          const singles = blockRows.filter(row => activityType(row) !== 'parallel' && !isEcmiPrizeTalk(row));
-          const rooms = [...new Set([...parallel,...prizeTalks].map(row => row.room).filter(Boolean))].sort((a,b) => a.localeCompare(b,undefined,{numeric:true}));
-          const cards = [renderParallel(parallel,query), prizeTalks.length ? renderPrizeSession(prizeTalks,query) : '', ...singles.map(row => renderSingle(row,query))].filter(Boolean).join('');
+          const industryTalks = blockRows.filter(isIndustrySpeaker);
+          const singles = blockRows.filter(row => activityType(row) !== 'parallel' && !isEcmiPrizeTalk(row) && !isIndustrySpeaker(row));
+          const rooms = [...new Set([...parallel,...prizeTalks,...industryTalks].map(row => row.room).filter(Boolean))].sort((a,b) => a.localeCompare(b,undefined,{numeric:true}));
+          const cards = [renderParallel(parallel,query), prizeTalks.length ? renderPrizeSession(prizeTalks,query) : '', industryTalks.length ? renderIndustrySession(industryTalks,query) : '', ...singles.map(row => renderSingle(row,query))].filter(Boolean).join('');
           if (blockRows.length === 1) {
             const row = blockRows[0];
             const mainText = row.name || row.title || blockLabel(blockRows,key);
