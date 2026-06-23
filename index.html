@@ -569,8 +569,7 @@
           <div class="session-meta">${rooms.length ? `<span><strong>${rooms.length === 1 ? 'Room' : 'Rooms'}:</strong> ${rooms.map(room => highlighted(room,query)).join(', ')}</span>` : ''}</div>
         </header>
         <ol class="ceremony-list">${talks.map(talk => `<li class="ceremony-speaker">
-          <p class="speaker">${highlighted(talk.name,query)}${talk.institution ? `<span class="speaker-institution"> (${highlighted(talk.institution,query)})</span>` : ''}</p>
-          ${talk.title ? `<p class="talk-title">${highlighted(talk.title,query)}</p>` : ''}
+          <p class="speaker">${highlighted(talk.name,query)}${talk.institution ? `<span class="speaker-institution"> (${highlighted(talk.institution,query)})</span>` : ''}${talk.title ? `<span class="speaker-institution">, ${highlighted(talk.title,query)}</span>` : ''}</p>
         </li>`).join('')}</ol>
       </article>`;
     }
