@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -129,6 +129,7 @@
       padding: 10px 14px;
     }
     .standalone-row.no-type { grid-template-columns: 82px minmax(0,1fr); }
+    .standalone-row.has-location { grid-template-columns: 82px minmax(0,1fr) auto; }
     .standalone-row time { color: var(--blue); font-size: 20px; font-weight: 800; }
     .standalone-type { color: var(--muted); font-size: 12px; font-weight: 800; text-transform: uppercase; }
     .standalone-main { min-width: 0; overflow-wrap: anywhere; }
@@ -136,6 +137,7 @@
     .standalone-title { color: #344054; }
     .standalone-room { color: var(--muted); font-size: 13px; }
     .standalone-row.no-type .standalone-room { grid-column: 2; }
+    .standalone-location { color: var(--muted); font-size: 13px; font-weight: 700; text-align: right; white-space: nowrap; }
     .standalone-main .inline-map { color: var(--blue); font-weight: 800; text-decoration: underline; }
     .plenary-row { background: var(--surface); border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
     .plenary-summary {
@@ -253,9 +255,11 @@
       .block-rooms { max-width: 115px; white-space: normal; font-size: 11px; }
       .standalone-row { grid-template-columns: 58px minmax(0,1fr); gap: 4px 10px; }
       .standalone-row.no-type { grid-template-columns: 58px minmax(0,1fr); }
+      .standalone-row.has-location { grid-template-columns: 58px minmax(0,1fr); }
       .standalone-type { grid-column: 2; }
       .standalone-main { grid-column: 2; }
       .standalone-room { grid-column: 2; }
+      .standalone-location { grid-column: 2; text-align: left; white-space: normal; }
       .plenary-summary { grid-template-columns: 58px minmax(0,1fr) auto; gap: 4px 10px; }
       .plenary-label, .plenary-main { grid-column: 2; }
       .plenary-summary .standalone-room { grid-column: 2; }
@@ -289,7 +293,7 @@
       {
         day: 'Monday', time: '08:00', room: '', chair: '',
         name: 'Registration desk opens', institution: '',
-        title: 'K. Bar\u0161ausko 59', track: ''
+        title: 'K. Bar\u0161ausko 59, follow signs', track: ''
       },
       {
         day: 'Monday', time: '08:30', room: 'A1', chair: 'Audrius Kabasinskas',
@@ -654,10 +658,12 @@
               </details>`;
             }
             const isNetworkingEvent = row.day === 'Thursday' && row.time === '18:00' && /(networking event|social dinner)/.test(row.name.toLowerCase());
-            return `<section class="time-standalone"><div class="standalone-row no-type">
+            const isRegistration = row.day === 'Monday' && row.time === '08:00' && row.name === 'Registration desk opens';
+            return `<section class="time-standalone"><div class="standalone-row no-type${isRegistration ? ' has-location' : ''}">
               <time>${esc(key)}</time>
-              <span class="standalone-main"><strong>${isNetworkingEvent ? linkedMapText(mainText,query) : highlighted(mainText,query)}${row.institution ? `<span class="speaker-institution"> (${highlighted(row.institution,query)})</span>` : ''}</strong>${row.title && row.title !== mainText ? `<span class="standalone-title">${highlighted(row.title,query)}</span>` : ''}</span>
-              ${row.room || row.chair ? `<span class="standalone-room">${row.room ? `Room ${highlighted(row.room,query)}` : ''}${row.room && row.chair ? ' · ' : ''}${row.chair ? `Session chair: ${highlighted(row.chair,query)}` : ''}</span>` : ''}
+              <span class="standalone-main"><strong>${isNetworkingEvent ? linkedMapText(mainText,query) : highlighted(mainText,query)}${row.institution ? `<span class="speaker-institution"> (${highlighted(row.institution,query)})</span>` : ''}</strong>${row.title && row.title !== mainText && !isRegistration ? `<span class="standalone-title">${highlighted(row.title,query)}</span>` : ''}</span>
+              ${isRegistration ? `<span class="standalone-location">${highlighted(row.title,query)}</span>` : ''}
+              ${!isRegistration && (row.room || row.chair) ? `<span class="standalone-room">${row.room ? `Room ${highlighted(row.room,query)}` : ''}${row.room && row.chair ? ' · ' : ''}${row.chair ? `Session chair: ${highlighted(row.chair,query)}` : ''}</span>` : ''}
             </div></section>`;
           }
           return `<details class="time-accordion" ${query ? 'open' : ''}>
@@ -698,3 +704,7 @@
   </script>
 </body>
 </html>
+
+
+
+
