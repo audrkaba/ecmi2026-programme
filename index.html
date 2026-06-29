@@ -274,10 +274,6 @@
       <label aria-label="Search">
         <input id="searchFilter" type="search" placeholder="Search for speaker, title, session, room, or lunch..." aria-label="Search">
       </label>
-      <label class="check-control">
-        <input id="fullProgramme" type="checkbox">
-        <span>Search entire programme</span>
-      </label>
       <button id="clearBtn" type="button">Clear</button>
     </div>
   </section>
@@ -343,13 +339,6 @@
       Wednesday: 'Wednesday (July 1, 2026)',
       Thursday: 'Thursday (July 2, 2026), Industry day',
       Friday: 'Friday (July 3, 2026)'
-    };
-    const conferenceDates = {
-      Monday: '2026-06-29',
-      Tuesday: '2026-06-30',
-      Wednesday: '2026-07-01',
-      Thursday: '2026-07-02',
-      Friday: '2026-07-03'
     };
     const plenarySpeakers = {
       'Mayur Pal': {
@@ -422,10 +411,6 @@
     function minutes(value) {
       const parts = String(value).split(':').map(Number);
       return parts[0] * 60 + parts[1];
-    }
-
-    function activityDateTime(row) {
-      return new Date(`${conferenceDates[row.day]}T${row.time}:00+03:00`);
     }
 
     function activityType(row) {
@@ -613,12 +598,10 @@
 
     function render() {
       const query = $('searchFilter').value.trim().toLowerCase();
-      const includePast = $('fullProgramme').checked;
-      const now = new Date();
       const rows = source.filter(row => {
         const plenary = plenarySpeakers[row.name] || {};
         const haystack = [row.name,row.title,row.track,row.room,row.institution,row.chair,plenary.displayName,plenary.institution,plenary.chair,plenaryAbstracts[row.name]].join(' ').toLowerCase();
-        return (includePast || activityDateTime(row) >= now) && (!query || haystack.includes(query));
+        return !query || haystack.includes(query);
       });
 
       $('emptyState').style.display = rows.length ? 'none' : 'block';
@@ -691,13 +674,11 @@
     }
 
     $('searchFilter').addEventListener('input',render);
-    $('fullProgramme').addEventListener('change',render);
     document.addEventListener('toggle',reportProgrammeHeight,true);
     window.addEventListener('load',reportProgrammeHeight);
     if ('ResizeObserver' in window) new ResizeObserver(reportProgrammeHeight).observe(document.body);
     $('clearBtn').addEventListener('click',() => {
       $('searchFilter').value = '';
-      $('fullProgramme').checked = false;
       render();
     });
     render();
