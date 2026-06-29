@@ -139,6 +139,9 @@
     .standalone-row.no-type .standalone-room { grid-column: 2; }
     .standalone-location { color: var(--muted); font-size: 13px; font-weight: 700; text-align: right; white-space: nowrap; }
     .standalone-main .inline-map { color: var(--blue); font-weight: 800; text-decoration: underline; }
+    .room-location { color: var(--muted); font-weight: 600; }
+    .room-location a { color: var(--blue); font-weight: 800; text-decoration: underline; }
+    .block-rooms .room-location { display: block; }
     .plenary-row { background: var(--surface); border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
     .plenary-summary {
       display: grid;
@@ -252,7 +255,7 @@
       .time-summary { grid-template-columns: 58px minmax(0,1fr) auto auto; gap: 8px; }
       .time-summary .summary-count { display: none; }
       .time-summary time { font-size: 17px; }
-      .block-rooms { max-width: 115px; white-space: normal; font-size: 11px; }
+      .block-rooms { max-width: 210px; white-space: normal; font-size: 11px; }
       .standalone-row { grid-template-columns: 58px minmax(0,1fr); gap: 4px 10px; }
       .standalone-row.no-type { grid-template-columns: 58px minmax(0,1fr); }
       .standalone-row.has-location { grid-template-columns: 58px minmax(0,1fr); }
@@ -493,6 +496,22 @@
       return `${highlighted(value.slice(0,start),query)}<a class="inline-map" href="https://maps.app.goo.gl/GSkttjqaCK51Hdky7" target="_blank" rel="noopener">${highlighted(match[0],query)}</a>${highlighted(value.slice(start + match[0].length),query)}`;
     }
 
+    const studentuRooms = new Set(['106','107','108','110']);
+    const studentuDirections = 'https://www.google.com/maps/dir/?api=1&origin=K.%20Bar%C5%A1ausko%20g.%2059%2C%20Kaunas&destination=Student%C5%B3%20g.%2050%2C%20Kaunas&travelmode=walking';
+
+    function studentuLocation() {
+      return `<span class="room-location">· Studentų g. 50 · <a href="${studentuDirections}" target="_blank" rel="noopener">Walking directions from K. Baršausko g. 59</a></span>`;
+    }
+
+    function roomInfo(room, query) {
+      return `${highlighted(room || 'TBA',query)}${studentuRooms.has(room) ? ` ${studentuLocation()}` : ''}`;
+    }
+
+    function roomsInfo(rooms, query) {
+      const labels = rooms.map(room => highlighted(room,query)).join(', ');
+      return `${labels}${rooms.some(room => studentuRooms.has(room)) ? ` ${studentuLocation()}` : ''}`;
+    }
+
     function groupBy(items, keyFn) {
       return items.reduce((map, item) => {
         const key = keyFn(item);
@@ -514,7 +533,7 @@
             <div>
               <p class="session-type">${sessionType}</p>
               <h4>${highlighted(track || 'General session', query)}</h4>
-              <div class="session-meta"><span><strong>Room:</strong> ${highlighted(room || 'TBA',query)}</span>${chair ? `<span><strong>Chair:</strong> ${highlighted(chair,query)}</span>` : ''}</div>
+              <div class="session-meta"><span><strong>Room:</strong> ${roomInfo(room,query)}</span>${chair ? `<span><strong>Chair:</strong> ${highlighted(chair,query)}</span>` : ''}</div>
             </div>
           </summary>
           <ol class="talk-list">${talks.map(talk => `<li class="talk">
@@ -536,7 +555,7 @@
       return `<article class="session-card ${type === 'programme' ? 'programme-item' : type}">
         <header class="session-head">
           <p class="session-type">${labels[type]}</p>
-          <div class="session-meta">${row.room ? `<span><strong>Room:</strong> ${esc(row.room)}</span>` : ''}</div>
+          <div class="session-meta">${row.room ? `<span><strong>Room:</strong> ${roomInfo(row.room,query)}</span>` : ''}</div>
         </header>
         <div class="single-item">
           <p class="single-name">${highlighted(row.name,query)}${row.institution ? `<span class="speaker-institution"> (${highlighted(row.institution,query)})</span>` : ''}</p>
@@ -567,7 +586,7 @@
       return `<article class="session-card programme-item">
         <header class="session-head">
           <h4>Opening ceremony</h4>
-          <div class="session-meta">${rooms.length ? `<span><strong>${rooms.length === 1 ? 'Room' : 'Rooms'}:</strong> ${rooms.map(room => highlighted(room,query)).join(', ')}</span>` : ''}${chair ? `<span><strong>Session chair:</strong> ${highlighted(chair,query)}</span>` : ''}</div>
+          <div class="session-meta">${rooms.length ? `<span><strong>${rooms.length === 1 ? 'Room' : 'Rooms'}:</strong> ${roomsInfo(rooms,query)}</span>` : ''}${chair ? `<span><strong>Session chair:</strong> ${highlighted(chair,query)}</span>` : ''}</div>
         </header>
         <ol class="ceremony-list">${talks.map(talk => `<li class="ceremony-speaker">
           <p class="speaker">${highlighted(talk.name,query)}${talk.institution ? `<span class="speaker-institution"> (${highlighted(talk.institution,query)})</span>` : ''}${talk.title ? `<span class="speaker-institution">, ${highlighted(talk.title,query)}</span>` : ''}</p>
@@ -582,7 +601,7 @@
       return `<article class="session-card programme-item">
         <header class="session-head">
           <h4>Industry speakers</h4>
-          <div class="session-meta">${rooms.length ? `<span><strong>${rooms.length === 1 ? 'Room' : 'Rooms'}:</strong> ${rooms.map(room => highlighted(room,query)).join(', ')}</span>` : ''}${chair ? `<span><strong>Session chair:</strong> ${highlighted(chair,query)}</span>` : ''}</div>
+          <div class="session-meta">${rooms.length ? `<span><strong>${rooms.length === 1 ? 'Room' : 'Rooms'}:</strong> ${roomsInfo(rooms,query)}</span>` : ''}${chair ? `<span><strong>Session chair:</strong> ${highlighted(chair,query)}</span>` : ''}</div>
         </header>
         <ol class="talk-list">${talks.map(talk => `<li class="talk">
           <time class="talk-time">${esc(talk.time)}</time>
@@ -600,7 +619,7 @@
       const query = $('searchFilter').value.trim().toLowerCase();
       const rows = source.filter(row => {
         const plenary = plenarySpeakers[row.name] || {};
-        const haystack = [row.name,row.title,row.track,row.room,row.institution,row.chair,plenary.displayName,plenary.institution,plenary.chair,plenaryAbstracts[row.name]].join(' ').toLowerCase();
+        const haystack = [row.name,row.title,row.track,row.room,row.institution,row.chair,plenary.displayName,plenary.institution,plenary.chair,plenaryAbstracts[row.name],studentuRooms.has(row.room) ? 'Studentų g. 50 K. Baršausko g. 59 walking directions' : ''].join(' ').toLowerCase();
         return !query || haystack.includes(query);
       });
 
@@ -628,7 +647,7 @@
                   <time>${esc(key)}</time>
                   <span class="plenary-label">Plenary talk</span>
                   <span class="plenary-main"><strong>${highlighted(speaker.displayName || row.name,query)}</strong><span class="standalone-title">${highlighted(row.title,query)}</span></span>
-                  ${row.room ? `<span class="standalone-room">Room ${highlighted(row.room,query)}</span>` : ''}
+                  ${row.room ? `<span class="standalone-room">Room ${roomInfo(row.room,query)}</span>` : ''}
                 </summary>
                 <div class="plenary-details">
                   ${speaker.institution ? `<p><strong>Institution:</strong> ${highlighted(speaker.institution,query)}</p>` : ''}
@@ -646,14 +665,14 @@
               <time>${esc(key)}</time>
               <span class="standalone-main"><strong>${isNetworkingEvent ? linkedMapText(mainText,query) : highlighted(mainText,query)}${row.institution ? `<span class="speaker-institution"> (${highlighted(row.institution,query)})</span>` : ''}</strong>${row.title && row.title !== mainText && !isRegistration ? `<span class="standalone-title">${highlighted(row.title,query)}</span>` : ''}</span>
               ${isRegistration ? `<span class="standalone-location">${highlighted(row.title,query)}</span>` : ''}
-              ${!isRegistration && (row.room || row.chair) ? `<span class="standalone-room">${row.room ? `Room ${highlighted(row.room,query)}` : ''}${row.room && row.chair ? ' · ' : ''}${row.chair ? `Session chair: ${highlighted(row.chair,query)}` : ''}</span>` : ''}
+              ${!isRegistration && (row.room || row.chair) ? `<span class="standalone-room">${row.room ? `Room ${roomInfo(row.room,query)}` : ''}${row.room && row.chair ? ' · ' : ''}${row.chair ? `Session chair: ${highlighted(row.chair,query)}` : ''}</span>` : ''}
             </div></section>`;
           }
           return `<details class="time-accordion" ${query ? 'open' : ''}>
             <summary class="time-summary">
               <time>${esc(key)}</time>
               <strong>${blockLabel(blockRows,key)}</strong>
-              ${rooms.length ? `<span class="block-rooms">${rooms.length === 1 ? 'Room' : 'Rooms'} ${rooms.map(esc).join(', ')}</span>` : ''}
+              ${rooms.length ? `<span class="block-rooms">${rooms.length === 1 ? 'Room' : 'Rooms'} ${roomsInfo(rooms,query)}</span>` : ''}
             </summary>
             <div class="time-group"><div class="session-grid">${cards}</div></div>
           </details>`;
