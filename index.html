@@ -422,7 +422,7 @@
       if (isOpeningCeremony(row)) return 'programme';
       if (row.day === 'Thursday' && !row.track) return 'programme';
       if (isEcmiPrizeTalk(row)) return 'programme';
-      if (/(opening ceremony|registration desk|photo session|industry speakers|lanczos prize|anile-ecmi prize winner|wacker memorial prize winner|panel discusion|panel discussion|closing)/.test(name)) return 'programme';
+      if (/(opening ceremony|registration desk|photo session|industry speakers|lanczos prize|panel discusion|panel discussion|closing)/.test(name)) return 'programme';
       return 'parallel';
     }
 
