@@ -608,26 +608,20 @@
     }
 
     function renderExcursionSession(row, query) {
-      return `<article class="session-card social">
-        <header class="session-head">
-          <p class="session-type">Social programme</p>
-          <h4>${highlighted(row.name,query)}</h4>
-        </header>
-        <div class="session-grid excursion-grid">
-          ${excursions.map(excursion => `<details class="session-card social" ${query ? 'open' : ''}>
-            <summary class="session-head">
-              <div>
-                <h4>${highlighted(excursion.title,query)}</h4>
-                <div class="session-meta"><span><strong>Meeting point:</strong> ${highlighted(excursion.route[0],query)}</span></div>
-              </div>
-            </summary>
-            <div class="single-item">
-              <ol class="route-list">${excursion.route.map(point => `<li>${highlighted(point,query)}</li>`).join('')}</ol>
-              <a class="map-link" href="${esc(excursion.map)}" target="_blank" rel="noopener">Open meeting point in Google Maps</a>
+      return `<div class="session-grid excursion-grid">
+        ${excursions.map(excursion => `<details class="session-card social" ${query ? 'open' : ''}>
+          <summary class="session-head">
+            <div>
+              <h4>${highlighted(excursion.title,query)}</h4>
+              <div class="session-meta"><span><strong>Meeting point:</strong> ${highlighted(excursion.route[0],query)}</span></div>
             </div>
-          </details>`).join('')}
-        </div>
-      </article>`;
+          </summary>
+          <div class="single-item">
+            <ol class="route-list">${excursion.route.map(point => `<li>${highlighted(point,query)}</li>`).join('')}</ol>
+            <a class="map-link" href="${esc(excursion.map)}" target="_blank" rel="noopener">Open meeting point in Google Maps</a>
+          </div>
+        </details>`).join('')}
+      </div>`;
     }
 
     function renderSingle(row, query) {
@@ -735,7 +729,7 @@
                   <time>${esc(key)}</time>
                   <strong>${highlighted(row.name,query)}</strong>
                 </summary>
-                <div class="time-group"><div class="session-grid">${renderExcursionSession(row,query)}</div></div>
+                <div class="time-group">${renderExcursionSession(row,query)}</div>
               </details>`;
             }
             if (activityType(row) === 'plenary') {
