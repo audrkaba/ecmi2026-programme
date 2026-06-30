@@ -625,6 +625,7 @@
         <ol class="talk-list">${talks.map(talk => `<li class="talk">
           <time class="talk-time">${esc(talk.time)}</time>
           <div>
+            ${talk.track ? `<p class="session-type">${highlighted(talk.track,query)}</p>` : ''}
             <p class="speaker">${highlighted(talk.name,query)}${talk.institution ? `<span class="speaker-institution"> (${highlighted(talk.institution,query)})</span>` : ''}</p>
             ${talk.title ? `<p class="talk-title">${highlighted(talk.title,query)}</p>` : ''}
             ${prizeAbstracts[talk.name] ? `<details class="abstract-details" ${query && prizeAbstracts[talk.name].toLowerCase().includes(query) ? 'open' : ''}><summary>Abstract</summary><p>${highlighted(prizeAbstracts[talk.name],query)}</p></details>` : ''}
