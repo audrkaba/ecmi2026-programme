@@ -413,6 +413,58 @@
       return parts[0] * 60 + parts[1];
     }
 
+    const dayDates = {
+      Monday: '2026-06-29',
+      Tuesday: '2026-06-30',
+      Wednesday: '2026-07-01',
+      Thursday: '2026-07-02',
+      Friday: '2026-07-03'
+    };
+
+    function localDateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2,'0');
+      const day = String(date.getDate()).padStart(2,'0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function currentProgrammeDay() {
+      const today = localDateKey(new Date());
+      return Object.keys(dayDates).find(day => dayDates[day] === today) || '';
+    }
+
+    function blockEndMinutes(key, rows) {
+      const types = new Set(rows.map(activityType));
+      if (rows.some(isOpeningCeremony)) return 9 * 60;
+      if (rows.some(isEcmiPrizeTalk)) return 19 * 60;
+      if (rows.some(isIndustrySpeaker) && key === '09:25') return 10 * 60 + 30;
+      if (rows.some(isIndustrySpeaker) && key === '14:00') return 15 * 60;
+      if (types.has('parallel')) {
+        if (key === '10:30') return 12 * 60;
+        if (key === '15:30') return 17 * 60;
+        if (key === '17:15') return 19 * 60;
+      }
+      if (types.has('plenary')) return minutes(key) + 60;
+      if (types.has('break')) return minutes(key) + 30;
+      if (types.has('meal')) return minutes(key) + 60;
+      if (types.has('social')) return 24 * 60;
+      return Math.max(...rows.map(row => minutes(row.time))) + 20;
+    }
+
+    function isCurrentBlock(day, key, rows) {
+      if (queryActive()) return false;
+      if (day !== currentProgrammeDay()) return false;
+      const now = new Date();
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+      const start = minutes(key);
+      const end = blockEndMinutes(key, rows);
+      return nowMinutes >= start && nowMinutes < end;
+    }
+
+    function queryActive() {
+      return $('searchFilter')?.value.trim().length > 0;
+    }
+
     function activityType(row) {
       const name = row.name.toLowerCase();
       if (row.track.toLowerCase().startsWith('plenary')) return 'plenary';
@@ -638,13 +690,14 @@
           const singles = blockRows.filter(row => activityType(row) !== 'parallel' && !isOpeningCeremony(row) && !isEcmiPrizeTalk(row) && !isIndustrySpeaker(row));
           const rooms = [...new Set([...parallel,...openingTalks,...prizeTalks,...industryTalks].map(row => row.room).filter(Boolean))].sort((a,b) => a.localeCompare(b,undefined,{numeric:true}));
           const cards = [renderParallel(parallel,query), openingTalks.length ? renderOpeningCeremony(openingTalks,query) : '', prizeTalks.length ? renderPrizeSession(prizeTalks,query) : '', industryTalks.length ? renderIndustrySession(industryTalks,query) : '', ...singles.map(row => renderSingle(row,query))].filter(Boolean).join('');
+          const currentBlock = isCurrentBlock(day,key,blockRows);
           if (blockRows.length === 1) {
             const row = blockRows[0];
             const mainText = row.name || row.title || blockLabel(blockRows,key);
             if (activityType(row) === 'plenary') {
               const speaker = plenarySpeakers[row.name] || { institution: row.institution, field: '', profile: '' };
               const abstractMatches = query && plenaryAbstracts[row.name]?.toLowerCase().includes(query);
-              return `<details class="plenary-row" ${query ? 'open' : ''}>
+              return `<details class="plenary-row" ${query || currentBlock ? 'open' : ''}>
                 <summary class="plenary-summary">
                   <time>${esc(key)}</time>
                   <span class="plenary-label">Plenary talk</span>
@@ -670,7 +723,7 @@
               ${!isRegistration && (row.room || row.chair) ? `<span class="standalone-room">${row.room ? `Room ${roomInfo(row.room,query)}` : ''}${row.room && row.chair ? ' · ' : ''}${row.chair ? `Session chair: ${highlighted(row.chair,query)}` : ''}</span>` : ''}
             </div></section>`;
           }
-          return `<details class="time-accordion" ${query ? 'open' : ''}>
+          return `<details class="time-accordion" ${query || currentBlock ? 'open' : ''}>
             <summary class="time-summary">
               <time>${esc(key)}</time>
               <strong>${blockLabel(blockRows,key)}</strong>
@@ -679,7 +732,8 @@
             <div class="time-group"><div class="session-grid">${cards}</div></div>
           </details>`;
         }).join('');
-        return `<details class="day-accordion" ${query || dayIndex === 0 ? 'open' : ''}>
+        const dayOpen = query || dayRows.some(row => isCurrentBlock(day,blockKey(row),blocks.get(blockKey(row)) || []));
+        return `<details class="day-accordion" ${dayOpen ? 'open' : ''}>
           <summary class="day-summary"><span>${esc(dayLabels[day] || day)}</span></summary>
           <div class="day-content">${times}</div>
         </details>`;
