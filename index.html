@@ -660,8 +660,7 @@
     function renderLanczosDetails(row, query) {
       return `<article class="session-card programme-item">
         <div class="single-item">
-          <p class="speaker">${highlighted(row.name,query)}</p>
-          <p class="talk-title">${highlighted(row.title,query)}</p>
+          <p class="speaker">${highlighted(row.name,query)}${row.title ? `<span class="speaker-institution">, ${highlighted(row.title,query)}</span>` : ''}</p>
           ${prizeAbstracts[row.name] ? `<details class="abstract-details" ${query && prizeAbstracts[row.name].toLowerCase().includes(query) ? 'open' : ''}><summary>Abstract</summary><p>${highlighted(prizeAbstracts[row.name],query)}</p></details>` : ''}
         </div>
       </article>`;
