@@ -661,7 +661,7 @@
       const chair = talks.find(row => row.chair)?.chair || '';
       return `<article class="session-card programme-item">
         <header class="session-head">
-          <h4>${talks.some(talk => /lanczos prize/i.test(talk.track)) ? 'Lanczos Prize' : 'ECMI prize winners'}</h4>
+          <h4>${talks.some(talk => /lanczos prize/i.test(talk.track)) ? 'Lanczos Prize winner' : 'ECMI prize winners'}</h4>
           <div class="session-meta">${talks[0]?.room ? `<span><strong>Room:</strong> ${roomInfo(talks[0].room,query)}</span>` : ''}${chair ? `<span><strong>Session chair:</strong> ${highlighted(chair,query)}</span>` : ''}</div>
         </header>
         <ol class="talk-list">${talks.map(talk => `<li class="talk">
@@ -771,7 +771,7 @@
               return `<details class="time-accordion" ${query || currentBlock ? 'open' : ''}>
                 <summary class="time-summary">
                   <time>${esc(key)}</time>
-                  <span class="plenary-main"><strong>${highlighted(row.name,query)}</strong><span class="standalone-title">${highlighted(row.title,query)}</span></span>
+                  <strong>${/lanczos prize/i.test(row.track || row.name) ? 'Lanczos Prize winner' : highlighted(row.name,query)}</strong>
                   ${row.room ? `<span class="block-rooms">Room ${roomInfo(row.room,query)}</span>` : ''}
                 </summary>
                 <div class="time-group"><div class="session-grid">${renderPrizeSession([row],query)}</div></div>
