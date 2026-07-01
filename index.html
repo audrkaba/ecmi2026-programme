@@ -633,10 +633,10 @@
     function renderPanelDiscussion(row, query) {
       return `<article class="session-card programme-item">
         <header class="session-head">
-          <h4>Panelists</h4>
-          <div class="session-meta">${row.room ? `<span><strong>Room:</strong> ${roomInfo(row.room,query)}</span>` : ''}${row.chair ? `<span><strong>Chair:</strong> ${highlighted(row.chair,query)}</span>` : ''}</div>
+          <h4>${highlighted(row.name,query)}</h4>
+          <div class="session-meta">${row.room ? `<span><strong>Room:</strong> ${roomInfo(row.room,query)}</span>` : ''}${row.chair ? `<span><strong>Session chair:</strong> ${highlighted(row.chair,query)}</span>` : ''}</div>
         </header>
-        <ol class="talk-list">${panelists.map(panelist => `<li class="talk"><div><p class="speaker">${highlighted(panelist.name,query)}${panelist.chair ? ' <strong>(chair)</strong>' : ''}<span class="speaker-institution"> (${highlighted(panelist.institution,query)})</span></p></div></li>`).join('')}</ol>
+        <ol class="talk-list">${panelists.map(panelist => `<li class="talk"><time class="talk-time"></time><div><p class="speaker">${highlighted(panelist.name,query)}<span class="speaker-institution"> (${highlighted(panelist.institution,query)})</span></p></div></li>`).join('')}</ol>
       </article>`;
     }
     function renderSingle(row, query) {
@@ -781,7 +781,7 @@
               return `<details class="time-accordion" ${query || currentBlock ? 'open' : ''}>
                 <summary class="time-summary">
                   <time>${esc(key)}</time>
-                  <strong>${highlighted(row.name,query)}</strong>
+                  <strong>Panel discussion</strong>
                   <span class="block-rooms">Room ${roomInfo(row.room,query)}</span>
                 </summary>
                 <div class="time-group"><div class="session-grid">${renderPanelDiscussion(row,query)}</div></div>
