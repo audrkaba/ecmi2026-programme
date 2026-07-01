@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ECMI 2026 Speakers by Country</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Calibri, Arial, sans-serif;
+      color: #17212b;
+      background: transparent;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; background: transparent; }
+    main { width: min(100%, 1040px); margin: 0 auto; }
+    h1 { margin: 0; font-size: 28px; letter-spacing: 0; }
+    .summary { margin: 6px 0 24px; color: #5b6775; font-size: 16px; }
+    .visual { display: grid; grid-template-columns: minmax(260px, 420px) minmax(260px, 1fr); gap: 36px; align-items: center; }
+    .pie {
+      width: min(100%, 400px);
+      aspect-ratio: 1;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: conic-gradient(
+        #1f5f8b 0deg 66.26deg,
+        #d5573b 66.26deg 130.31deg,
+        #e5a52e 130.31deg 170.06deg,
+        #2d8b75 170.06deg 200.98deg,
+        #775da6 200.98deg 231.90deg,
+        #c8689a 231.90deg 256.20deg,
+        #4f7cac 256.20deg 269.45deg,
+        #7a9e45 269.45deg 278.28deg,
+        #9a6b42 278.28deg 287.12deg,
+        #4f9da6 287.12deg 295.95deg,
+        #a8afb8 295.95deg 360deg
+      );
+      position: relative;
+    }
+    .pie::after {
+      content: "163\A speakers";
+      white-space: pre;
+      position: absolute;
+      inset: 24%;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #fff;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+    .legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
+    .legend-item { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; gap: 8px; align-items: center; min-width: 0; }
+    .swatch { width: 14px; height: 14px; }
+    .legend-item span:nth-child(2) { overflow-wrap: anywhere; }
+    .count { font-weight: 700; }
+    h2 { margin: 32px 0 10px; font-size: 20px; letter-spacing: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    th, td { padding: 8px 10px; border-bottom: 1px solid #d9dee3; text-align: left; }
+    th:last-child, td:last-child { width: 110px; text-align: right; }
+    th { background: #eef1f3; font-weight: 700; }
+    tbody tr:nth-child(even) { background: rgba(238, 241, 243, .45); }
+    .note { margin: 12px 0 0; color: #66717e; font-size: 13px; }
+    @media (max-width: 700px) {
+      body { padding: 14px; }
+      h1 { font-size: 23px; }
+      .visual { grid-template-columns: 1fr; gap: 24px; }
+      .pie { width: min(88vw, 360px); }
+      .legend { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>ECMI 2026 speakers by country</h1>
+    <p class="summary">163 unique speakers representing 26 countries</p>
+
+    <section class="visual" aria-label="Speakers by country chart">
+      <div class="pie" role="img" aria-label="Pie chart of ECMI 2026 speakers by country"></div>
+      <div class="legend">
+        <div class="legend-item"><span class="swatch" style="background:#1f5f8b"></span><span>Lithuania</span><span class="count">30</span></div>
+        <div class="legend-item"><span class="swatch" style="background:#d5573b"></span><span>Italy</span><span class="count">29</span></div>
+        <div class="legend-item"><span class="swatch" style="background:#e5a52e"></span><span>Germany</span><span class="count">18</span></div>
+        <div class="legend-item"><span class="swatch" style="background:#2d8b75"></span><span>Spain</span><span class="count">14</span></div>
+        <div class="legend-item"><span class="swatch" style="background:#775da6"></span><span>Poland</span><span class="count">14</span></div>
+        <div class="legend-item"><span class="swatch" style="background:#c8689a"></span><span>Portugal</span><span class="count">11</span></div>
+        <div class="legend-item"><span class="swatch" style="background:#4f7cac"></span><span>United Kingdom</span><span class="count">6</span></div>
+        <div class="legend-item"><span class="swatch" style="background:#7a9e45"></span><span>Netherlands</span><span class="count">4</span></div>
+        <div class="legend-item"><span class="swatch" style="background:#9a6b42"></span><span>Norway</span><span class="count">4</span></div>
+        <div class="legend-item"><span class="swatch" style="background:#4f9da6"></span><span>Ethiopia</span><span class="count">4</span></div>
+        <div class="legend-item"><span class="swatch" style="background:#a8afb8"></span><span>Other countries</span><span class="count">29</span></div>
+      </div>
+    </section>
+
+    <h2>Full country breakdown</h2>
+    <table>
+      <thead><tr><th>Country</th><th>Speakers</th></tr></thead>
+      <tbody>
+        <tr><td>Lithuania</td><td>30</td></tr>
+        <tr><td>Italy</td><td>29</td></tr>
+        <tr><td>Germany</td><td>18</td></tr>
+        <tr><td>Spain</td><td>14</td></tr>
+        <tr><td>Poland</td><td>14</td></tr>
+        <tr><td>Portugal</td><td>11</td></tr>
+        <tr><td>United Kingdom</td><td>6</td></tr>
+        <tr><td>Netherlands</td><td>4</td></tr>
+        <tr><td>Norway</td><td>4</td></tr>
+        <tr><td>Ethiopia</td><td>4</td></tr>
+        <tr><td>Ireland</td><td>3</td></tr>
+        <tr><td>Sweden</td><td>3</td></tr>
+        <tr><td>North Macedonia</td><td>3</td></tr>
+        <tr><td>Czech Republic</td><td>3</td></tr>
+        <tr><td>France</td><td>2</td></tr>
+        <tr><td>Switzerland</td><td>2</td></tr>
+        <tr><td>Ukraine</td><td>2</td></tr>
+        <tr><td>Hungary</td><td>2</td></tr>
+        <tr><td>Jordan</td><td>2</td></tr>
+        <tr><td>Serbia</td><td>1</td></tr>
+        <tr><td>Finland</td><td>1</td></tr>
+        <tr><td>Uganda</td><td>1</td></tr>
+        <tr><td>Slovakia</td><td>1</td></tr>
+        <tr><td>Oman</td><td>1</td></tr>
+        <tr><td>Türkiye</td><td>1</td></tr>
+        <tr><td>Belgium</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Counts are based on unique speakers listed in the published ECMI 2026 programme. A speaker appearing more than once is counted once.</p>
+  </main>
+</body>
+</html>
