@@ -656,6 +656,15 @@
       </article>`;
     }
 
+    function renderLanczosDetails(row, query) {
+      return `<article class="session-card programme-item">
+        <div class="single-item">
+          <p class="speaker">${highlighted(row.name,query)}</p>
+          <p class="talk-title">${highlighted(row.title,query)}</p>
+          ${prizeAbstracts[row.name] ? `<details class="abstract-details" ${query && prizeAbstracts[row.name].toLowerCase().includes(query) ? 'open' : ''}><summary>Abstract</summary><p>${highlighted(prizeAbstracts[row.name],query)}</p></details>` : ''}
+        </div>
+      </article>`;
+    }
     function renderPrizeSession(rows, query) {
       const talks = [...rows].sort((a,b) => minutes(a.time)-minutes(b.time));
       const chair = talks.find(row => row.chair)?.chair || '';
@@ -774,7 +783,7 @@
                   <strong>${/lanczos prize/i.test(row.track || row.name) ? 'Lanczos Prize winner' : highlighted(row.name,query)}</strong>
                   ${row.room ? `<span class="block-rooms">Room ${roomInfo(row.room,query)}</span>` : ''}
                 </summary>
-                <div class="time-group"><div class="session-grid">${renderPrizeSession([row],query)}</div></div>
+                <div class="time-group"><div class="session-grid">${/lanczos prize/i.test(row.track || row.name) ? renderLanczosDetails(row,query) : renderPrizeSession([row],query)}</div></div>
               </details>`;
             }
             if (isPanelDiscussion(row)) {
