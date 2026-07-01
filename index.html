@@ -514,7 +514,7 @@
       const type = activityType(row);
       const time = minutes(row.time);
       if (isOpeningCeremony(row)) return '08:30';
-      if (isEcmiPrizeTalk(row)) return '17:15';
+      if (isEcmiPrizeTalk(row)) return /lanczos prize/i.test(row.track || row.name) ? row.time : '17:15';
       if (isIndustrySpeaker(row) && time < 12 * 60) return '09:25';
       if (isIndustrySpeaker(row)) return '14:00';
       if (type === 'parallel' && time >= 10 * 60 + 30 && time < 12 * 60) return '10:30';
@@ -765,6 +765,16 @@
                     ${plenaryAbstracts[row.name] ? `<details class="abstract-details" ${abstractMatches ? 'open' : ''}><summary>Abstract</summary><p>${highlighted(plenaryAbstracts[row.name],query)}</p></details>` : ''}
                   </div>
                 </div>
+              </details>`;
+            }
+            if (isEcmiPrizeTalk(row)) {
+              return `<details class="time-accordion" ${query || currentBlock ? 'open' : ''}>
+                <summary class="time-summary">
+                  <time>${esc(key)}</time>
+                  <span class="plenary-main"><strong>${highlighted(row.name,query)}</strong><span class="standalone-title">${highlighted(row.title,query)}</span></span>
+                  ${row.room ? `<span class="block-rooms">Room ${roomInfo(row.room,query)}</span>` : ''}
+                </summary>
+                <div class="time-group"><div class="session-grid">${renderPrizeSession([row],query)}</div></div>
               </details>`;
             }
             if (isPanelDiscussion(row)) {
